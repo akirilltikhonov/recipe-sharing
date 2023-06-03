@@ -6,6 +6,9 @@ import net.azeti.challenge.application.domain.Recipe;
 import net.azeti.challenge.application.infra.jpa.mapper.RecipeMapper;
 import net.azeti.challenge.application.infra.jpa.repository.RecipeJpaRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,5 +21,12 @@ public class RecipeRepositoryImpl implements RecipeRepository {
     public Recipe create(Recipe recipe) {
         var recipeEntity = recipeMapper.toRecipeEntity(recipe);
         return recipeMapper.toRecipe(recipeJpaRepository.save(recipeEntity));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Recipe> getById(Long id) {
+        return recipeJpaRepository.findById(id)
+                .map(recipeMapper::toRecipe);
     }
 }

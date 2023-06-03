@@ -22,7 +22,7 @@ public class RecipeManagementImpl implements RecipeManagement {
 
     @Override
     public Optional<Recipe> getById(Long id) {
-        return Optional.empty();
+        return recipeRepository.getById(id);
     }
 
     @Override

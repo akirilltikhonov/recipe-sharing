@@ -10,6 +10,8 @@ import net.azeti.challenge.application.integrationtest.layer.jpa.ApplicationJpaT
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.PostConstruct;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class RecipeRepositoryTest extends ApplicationJpaTest {
@@ -22,6 +24,22 @@ public class RecipeRepositoryTest extends ApplicationJpaTest {
     private RecipeJpaRepository recipeJpaRepository;
     @Autowired
     private RecipeMapper recipeMapper;
+
+    private Recipe recipeWith3Ingredients;
+
+    @PostConstruct
+    void setUp() {
+        var recipe = recipeEntityGenerator.nextRecipeEntity();
+        recipe.addIngredient(ingredientEntityGenerator.nextIngredientEntity());
+        recipe.addIngredient(ingredientEntityGenerator.nextIngredientEntity());
+        recipe.addIngredient(ingredientEntityGenerator.nextIngredientEntity());
+        recipe = recipeJpaRepository.save(recipe);
+        recipeWith3Ingredients = recipeRepository.getById(recipe.getRecipeId())
+                .orElseThrow();
+        assertThat(recipeWith3Ingredients)
+                .usingRecursiveComparison()
+                .isEqualTo(recipe);
+    }
 
     @Test
     void create() {
@@ -44,5 +62,12 @@ public class RecipeRepositoryTest extends ApplicationJpaTest {
                 .isEqualTo(recipe);
         assertThat(createdRecipe.getRecipeId()).isNotNull();
         createdRecipe.getIngredients().forEach(i -> assertThat(i.getIngredientId()).isNotNull());
+    }
+
+    @Test
+    void getById() {
+        var recipe = recipeRepository.getById(recipeWith3Ingredients.getRecipeId()).orElseThrow();
+        assertThat(recipe).isEqualTo(recipeWith3Ingredients);
+        assertThat(recipe.getIngredients().size()).isEqualTo(3);
     }
 }

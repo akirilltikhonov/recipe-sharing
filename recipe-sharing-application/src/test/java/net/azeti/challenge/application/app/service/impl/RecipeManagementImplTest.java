@@ -8,6 +8,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
 
@@ -34,6 +36,11 @@ class RecipeManagementImplTest {
 
     @Test
     void getById() {
+        var recipe = Recipe.builder()
+                .recipeId(1L)
+                .build();
+        doReturn(Optional.of(recipe)).when(recipeRepository).getById(1L);
+        assertThat(recipeManagement.getById(1L)).isEqualTo(Optional.of(recipe));
     }
 
     @Test
