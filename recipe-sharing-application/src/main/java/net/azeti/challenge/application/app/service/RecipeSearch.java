@@ -1,4 +1,4 @@
-package net.azeti.challenge.application.app;
+package net.azeti.challenge.application.app.service;
 
 import net.azeti.challenge.application.domain.Recipe;
 
