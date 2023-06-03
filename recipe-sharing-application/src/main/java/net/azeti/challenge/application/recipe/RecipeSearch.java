@@ -1,4 +1,4 @@
-package net.azeti.challenge.recipe.recipe;
+package net.azeti.challenge.application.recipe;
 
 import java.util.List;
 
