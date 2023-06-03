@@ -7,6 +7,7 @@ import org.jeasy.random.EasyRandomParameters;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static org.jeasy.random.FieldPredicates.named;
@@ -16,7 +17,9 @@ public class RecipeEntityGenerator {
     private final EasyRandom random = new EasyRandom(
             new EasyRandomParameters()
                     .stringLengthRange(20, 20)
-                    .excludeField(named("recipeId"))
+                    .excludeField(named("recipeId")
+                            .or(named("ingredients"))
+                    )
                     .randomize(named("servings"), () -> ThreadLocalRandom.current().nextInt(1, 100))
     );
 

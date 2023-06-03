@@ -11,9 +11,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -25,7 +27,11 @@ public class IngredientEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "ingredient_id")
     private Long ingredientId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private RecipeEntity recipe;
 
     @Column(name = "value")
     private Float value;
@@ -37,4 +43,21 @@ public class IngredientEntity {
 
     @Column(name = "type")
     private String type;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        IngredientEntity that = (IngredientEntity) o;
+        return ingredientId != null && ingredientId.equals(that.getIngredientId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

@@ -5,8 +5,6 @@ import net.azeti.challenge.application.integrationtest.generator.RecipeEntityGen
 import net.azeti.challenge.application.integrationtest.generator.pattern.RecipePattern;
 import org.junit.jupiter.api.Test;
 
-import java.math.BigDecimal;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -23,7 +21,9 @@ class RecipeEntityGeneratorTest {
                 , "description"
                 , "instructions"
                 , "servings"
+                , "ingredients"
         );
+        assertThat(r.getIngredients()).isEmpty();
     }
 
     @Test
@@ -38,7 +38,6 @@ class RecipeEntityGeneratorTest {
 
     @Test
     void nextRecipeEntityWithPattern() {
-        BigDecimal testValue = BigDecimal.TEN;
         final var pattern = RecipePattern.builder()
                 .title("title")
                 .username("description")

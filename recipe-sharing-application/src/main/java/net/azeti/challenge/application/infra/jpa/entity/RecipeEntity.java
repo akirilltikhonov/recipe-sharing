@@ -3,12 +3,16 @@ package net.azeti.challenge.application.infra.jpa.entity;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "recipes")
@@ -37,4 +41,20 @@ public class RecipeEntity {
 
     @Column(name = "servings")
     private Integer servings;
+
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            mappedBy = "recipe",
+            orphanRemoval = true)
+    private List<IngredientEntity> ingredients = new ArrayList<>();
+
+    public void addIngredient(IngredientEntity ingredient) {
+        ingredients.add(ingredient);
+        ingredient.setRecipe(this);
+    }
+
+    public void removeIngredient(IngredientEntity ingredient) {
+        ingredients.remove(ingredient);
+        ingredient.setRecipe(null);
+    }
 }
