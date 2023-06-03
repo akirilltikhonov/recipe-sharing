@@ -14,6 +14,7 @@
     </properties>
 
     <modules>
+        <module>recipe-sharing-api</module>
         <module>recipe-sharing-application</module>
     </modules>
 </project>
