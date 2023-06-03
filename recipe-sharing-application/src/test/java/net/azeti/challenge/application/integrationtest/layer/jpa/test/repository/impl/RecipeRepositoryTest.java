@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.annotation.PostConstruct;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class RecipeRepositoryTest extends ApplicationJpaTest {
 
@@ -26,6 +27,7 @@ public class RecipeRepositoryTest extends ApplicationJpaTest {
     private RecipeMapper recipeMapper;
 
     private Recipe recipeWith3Ingredients;
+    private Recipe recipeToDelete;
 
     @PostConstruct
     void setUp() {
@@ -39,6 +41,12 @@ public class RecipeRepositoryTest extends ApplicationJpaTest {
         assertThat(recipeWith3Ingredients)
                 .usingRecursiveComparison()
                 .isEqualTo(recipe);
+
+        var recipeEntityToDelete = recipeEntityGenerator.nextRecipeEntity();
+        recipeEntityToDelete.addIngredient(ingredientEntityGenerator.nextIngredientEntity());
+        recipeEntityToDelete = recipeJpaRepository.save(recipeEntityToDelete);
+        recipeToDelete = recipeRepository.getById(recipeEntityToDelete.getRecipeId())
+                .orElseThrow();
     }
 
     @Test
@@ -69,5 +77,16 @@ public class RecipeRepositoryTest extends ApplicationJpaTest {
         var recipe = recipeRepository.getById(recipeWith3Ingredients.getRecipeId()).orElseThrow();
         assertThat(recipe).isEqualTo(recipeWith3Ingredients);
         assertThat(recipe.getIngredients().size()).isEqualTo(3);
+    }
+
+    @Test
+    void delete() {
+        assertThat(recipeRepository.delete(recipeToDelete.getRecipeId()))
+                .isEqualTo(recipeToDelete);
+    }
+
+    @Test
+    void deleteNotFound() {
+        assertThatThrownBy(() -> recipeRepository.delete(999999999999999999L));
     }
 }

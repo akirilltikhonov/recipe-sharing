@@ -49,6 +49,11 @@ class RecipeManagementImplTest {
 
     @Test
     void delete() {
+        var recipe = Recipe.builder()
+                .recipeId(1L)
+                .build();
+        doReturn(recipe).when(recipeRepository).delete(1L);
+        assertThat(recipeManagement.delete(1L)).isEqualTo(recipe);
     }
 
     @Test

@@ -9,4 +9,6 @@ public interface RecipeRepository {
     Recipe create(Recipe recipe);
 
     Optional<Recipe> getById(Long id);
+
+    Recipe delete(Long id);
 }

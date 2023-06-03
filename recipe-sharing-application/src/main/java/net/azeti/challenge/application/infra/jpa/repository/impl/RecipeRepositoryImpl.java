@@ -29,4 +29,13 @@ public class RecipeRepositoryImpl implements RecipeRepository {
         return recipeJpaRepository.findById(id)
                 .map(recipeMapper::toRecipe);
     }
+
+    @Override
+    @Transactional
+    public Recipe delete(Long id) {
+        var recipe = recipeMapper.toRecipe(recipeJpaRepository.findById(id)
+                .orElseThrow());
+        recipeJpaRepository.deleteById(id);
+        return recipe;
+    }
 }

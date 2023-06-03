@@ -32,7 +32,7 @@ public class RecipeManagementImpl implements RecipeManagement {
 
     @Override
     public Recipe delete(Long id) {
-        return null;
+        return recipeRepository.delete(id);
     }
 
     @Override

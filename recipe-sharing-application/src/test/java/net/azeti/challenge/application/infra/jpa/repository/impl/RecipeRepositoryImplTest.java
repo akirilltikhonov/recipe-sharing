@@ -14,6 +14,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class RecipeRepositoryImplTest {
@@ -51,5 +52,18 @@ class RecipeRepositoryImplTest {
                 .build();
         doReturn(recipe).when(recipeMapper).toRecipe(recipeEntity);
         assertThat(recipeRepository.getById(1L)).isEqualTo(Optional.of(recipe));
+    }
+
+    @Test
+    void delete() {
+        var recipeEntity = recipeEntityGenerator.nextRecipeEntity();
+        doReturn(Optional.of(recipeEntity)).when(recipeJpaRepository).findById(1L);
+        var recipe = Recipe.builder()
+                .recipeId(1L)
+                .build();
+        doReturn(recipe).when(recipeMapper).toRecipe(recipeEntity);
+        assertThat(recipeRepository.delete(1L)).isEqualTo(recipe);
+
+        verify(recipeJpaRepository).deleteById(1L);
     }
 }
