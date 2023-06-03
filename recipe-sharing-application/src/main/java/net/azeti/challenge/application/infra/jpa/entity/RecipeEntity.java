@@ -59,4 +59,8 @@ public class RecipeEntity {
         ingredients.remove(ingredient);
         ingredient.setRecipe(null);
     }
+
+    public void linkIngredients(List<IngredientEntity> ingredients) {
+        ingredients.forEach(i -> i.setRecipe(this));
+    }
 }

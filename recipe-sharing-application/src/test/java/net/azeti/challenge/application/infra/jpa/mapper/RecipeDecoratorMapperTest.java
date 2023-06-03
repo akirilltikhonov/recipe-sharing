@@ -1,16 +1,17 @@
 package net.azeti.challenge.application.infra.jpa.mapper;
 
 import net.azeti.challenge.application.domain.Recipe;
-import net.azeti.challenge.application.infra.jpa.entity.RecipeEntity;
 import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class RecipeMapperTest {
+class RecipeDecoratorMapperTest {
 
     private final RecipeMapper recipeMapper = new RecipeMapperImpl_(new IngredientMapperImpl());
+    private final RecipeDecoratorMapper recipeDecoratorMapper = new RecipeMapperImpl(recipeMapper);
 
     private final EasyRandom random = new EasyRandom(
             new EasyRandomParameters()
@@ -18,25 +19,20 @@ class RecipeMapperTest {
                     .collectionSizeRange(1, 3)
     );
 
+    @BeforeEach
+    void setUp() {
+        recipeDecoratorMapper.setRecipeMapper(recipeMapper);
+    }
+
     @Test
     void toRecipeEntity() {
         var recipe = random.nextObject(Recipe.class);
-        var recipeEntity = recipeMapper.toRecipeEntity(recipe);
+        var recipeEntity = recipeDecoratorMapper.toRecipeEntity(recipe);
 
         assertThat(recipeEntity)
                 .usingRecursiveComparison()
                 .ignoringFields("ingredients.recipe")
                 .isEqualTo(recipe);
-        recipeEntity.getIngredients().forEach(i -> assertThat(i.getRecipe()).isNull());
-    }
-
-    @Test
-    void toRecipe() {
-        var recipeEntity = random.nextObject(RecipeEntity.class);
-        var recipe = recipeMapper.toRecipe(recipeEntity);
-
-        assertThat(recipe)
-                .usingRecursiveComparison()
-                .isEqualTo(recipeEntity);
+        recipeEntity.getIngredients().forEach(i -> assertThat(i.getRecipe()).isEqualTo(recipeEntity));
     }
 }
