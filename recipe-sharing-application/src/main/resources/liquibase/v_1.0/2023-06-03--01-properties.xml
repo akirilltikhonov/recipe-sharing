@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd"
+                   logicalFilePath="path_independent">
+
+    <property name="long_type" value="bigint" dbms="postgresql"/>
+    <property name="long_type" value="long" dbms="h2"/>
+
+    <property name="db_user" value="sa" dbms="h2"/>
+
+    <property name="path_independent" value="path_independent"/>
+
+</databaseChangeLog>

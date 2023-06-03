@@ -6,4 +6,7 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd"
         logicalFilePath="${path_independent}">
 
+    <include file="2023-06-03--01-properties.xml" relativeToChangelogFile="true"/>
+    <include file="2023-06-03--02-hibernate_sequence.xml" relativeToChangelogFile="true"/>
+    <include file="2023-06-03--03-recipe.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>
