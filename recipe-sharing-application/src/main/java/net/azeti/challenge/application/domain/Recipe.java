@@ -1,4 +1,4 @@
-package net.azeti.challenge.application.recipe;
+package net.azeti.challenge.application.domain;
 
 import lombok.Getter;
 import lombok.Setter;

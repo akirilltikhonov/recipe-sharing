@@ -1,4 +1,6 @@
-package net.azeti.challenge.application.recipe;
+package net.azeti.challenge.application.app;
+
+import net.azeti.challenge.application.domain.Recipe;
 
 import java.util.List;
 import java.util.Optional;
