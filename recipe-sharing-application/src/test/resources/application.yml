@@ -1,0 +1,5 @@
+spring:
+  liquibase:
+    change-log: classpath:/liquibase/db.changelog-master.xml
+
+testcontainers.enabled: true
