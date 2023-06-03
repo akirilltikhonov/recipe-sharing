@@ -1,4 +1,4 @@
-package net.azeti.challenge.application.user;
+package net.azeti.challenge.application.infra.security.user;
 
 import java.util.Optional;
 
