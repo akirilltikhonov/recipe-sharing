@@ -10,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -65,5 +66,16 @@ class RecipeRepositoryImplTest {
         assertThat(recipeRepository.delete(1L)).isEqualTo(recipe);
 
         verify(recipeJpaRepository).deleteById(1L);
+    }
+
+    @Test
+    void getByUser() {
+        var recipeEntities = List.of(recipeEntityGenerator.nextRecipeEntity());
+        doReturn(recipeEntities).when(recipeJpaRepository).findByUsername("name");
+        var recipes = List.of(Recipe.builder()
+                .recipeId(1L)
+                .build());
+        doReturn(recipes).when(recipeMapper).toRecipes(recipeEntities);
+        assertThat(recipeRepository.getByUser("name")).isEqualTo(recipes);
     }
 }

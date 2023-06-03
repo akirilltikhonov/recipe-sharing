@@ -2,6 +2,7 @@ package net.azeti.challenge.application.app.port.repository;
 
 import net.azeti.challenge.application.domain.Recipe;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface RecipeRepository {
@@ -11,4 +12,6 @@ public interface RecipeRepository {
     Optional<Recipe> getById(Long id);
 
     Recipe delete(Long id);
+
+    List<Recipe> getByUser(String username);
 }

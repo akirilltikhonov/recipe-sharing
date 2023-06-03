@@ -37,6 +37,6 @@ public class RecipeManagementImpl implements RecipeManagement {
 
     @Override
     public List<Recipe> getByUser(String username) {
-        return null;
+        return recipeRepository.getByUser(username);
     }
 }

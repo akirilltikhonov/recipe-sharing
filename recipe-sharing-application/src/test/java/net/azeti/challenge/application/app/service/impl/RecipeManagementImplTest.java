@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -58,5 +59,10 @@ class RecipeManagementImplTest {
 
     @Test
     void getByUser() {
+        var recipes = List.of(Recipe.builder()
+                .recipeId(1L)
+                .build());
+        doReturn(recipes).when(recipeRepository).getByUser("name");
+        assertThat(recipeManagement.getByUser("name")).isEqualTo(recipes);
     }
 }
