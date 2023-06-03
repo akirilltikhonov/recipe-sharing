@@ -16,5 +16,6 @@
     <modules>
         <module>recipe-sharing-api</module>
         <module>recipe-sharing-application</module>
+        <module>recipe-sharing-client</module>
     </modules>
 </project>
