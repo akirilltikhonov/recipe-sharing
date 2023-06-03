@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd"
+                   logicalFilePath="${path_independent}">
+
+    <changeSet logicalFilePath="${path_independent}" id="2023-06-03--04-ingredient-1" author="ktikhonov">
+        <createTable tableName="ingredients">
+            <column name="ingredient_id" type="${long_type}">
+                <constraints primaryKey="true"
+                             primaryKeyName="ingredients_pk"
+                             nullable="false"/>
+            </column>
+            <column name="recipe_id" type="${long_type}">
+                <constraints foreignKeyName="recipe_id_fk"
+                             references="recipes(recipe_id)"
+                             nullable="false"/>
+            </column>
+            <column name="value" type="float">
+                <constraints nullable="false"/>
+            </column>
+            <column name="unit" type="enum_unit">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="text">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

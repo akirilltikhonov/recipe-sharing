@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd"
+                   logicalFilePath="${path_independent}">
+
+    <changeSet logicalFilePath="${path_independent}" id="2023-06-03--03-add-enum-unit-1" author="ktikhonov">
+        <comment>create enum unit enum_unit</comment>
+        <sql><![CDATA[
+            CREATE TYPE enum_unit AS enum(
+            'G','KG','ML','L','PC','TSP','TBSP','PINCH'
+            );
+            ]]></sql>
+    </changeSet>
+</databaseChangeLog>

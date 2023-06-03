@@ -9,4 +9,6 @@
     <include file="2023-06-03--01-properties.xml" relativeToChangelogFile="true"/>
     <include file="2023-06-03--02-hibernate_sequence.xml" relativeToChangelogFile="true"/>
     <include file="2023-06-03--03-recipe.xml" relativeToChangelogFile="true"/>
+    <include file="2023-06-03--04-add_enum_unit.xml" relativeToChangelogFile="true"/>
+    <include file="2023-06-03--05-ingredient.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>
