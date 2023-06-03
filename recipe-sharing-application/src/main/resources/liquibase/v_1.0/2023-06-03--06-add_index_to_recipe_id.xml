@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd"
+                   logicalFilePath="${path_independent}">
+
+    <changeSet logicalFilePath="${path_independent}" id="2023-06-03--06-add-index-to-recipe-id-1" author="ktikhonov">
+        <createIndex tableName="ingredients" indexName="idx_ingredients_recipe_id">
+            <column name="recipe_id"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

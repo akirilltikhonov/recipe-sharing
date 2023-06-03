@@ -1,0 +1,10 @@
+spring:
+  liquibase:
+    change-log: classpath:/liquibase/db.changelog-master.xml
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+
+testcontainers.enabled: true
