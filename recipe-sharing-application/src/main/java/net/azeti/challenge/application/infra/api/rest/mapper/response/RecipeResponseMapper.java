@@ -6,6 +6,8 @@ import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
+import java.util.List;
+
 @Mapper(
         componentModel = "spring"
         , unmappedTargetPolicy = ReportingPolicy.ERROR
@@ -16,4 +18,6 @@ import org.mapstruct.ReportingPolicy;
 public interface RecipeResponseMapper {
 
     RecipeDto toRecipeDto(Recipe recipe);
+
+    List<RecipeDto> toRecipeDtos(List<Recipe> recipes);
 }

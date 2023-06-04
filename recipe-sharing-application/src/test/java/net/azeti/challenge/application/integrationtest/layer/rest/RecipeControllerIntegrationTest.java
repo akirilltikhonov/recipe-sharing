@@ -16,6 +16,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -101,6 +103,22 @@ class RecipeControllerIntegrationTest {
         String expectedResponse = objectMapper.writeValueAsString(recipeDto);
 
         var response = mockMvc.perform(MockMvcRequestBuilders.delete(BASE_PATH + recipeDto.recipeId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse();
+        assertThat(response.getContentAsString()).isEqualTo(expectedResponse);
+    }
+
+    @Test
+    void getByUser() throws Exception {
+        String username = "username";
+        var recipeDtos = List.of(RecipeDto.builder().username("username").build());
+        doReturn(ResponseEntity.ok(recipeDtos)).when(controller)
+                .getByUser(username);
+
+        String expectedResponse = objectMapper.writeValueAsString(recipeDtos);
+
+        var response = mockMvc.perform(get(BASE_PATH + "search/username/" + username)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();

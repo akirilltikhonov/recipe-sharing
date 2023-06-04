@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -53,5 +54,11 @@ public class RecipeController implements RecipeControllerApi {
     public ResponseEntity<RecipeDto> delete(@PathVariable Long recipeId) {
         var deletedRecipe = recipeManagement.delete(recipeId);
         return ResponseEntity.ok(recipeResponseMapper.toRecipeDto(deletedRecipe));
+    }
+
+    @GetMapping("/search/username/{username}")
+    public ResponseEntity<List<RecipeDto>> getByUser(@PathVariable String username) {
+        var recipes = recipeManagement.getByUser(username);
+        return ResponseEntity.ok(recipeResponseMapper.toRecipeDtos(recipes));
     }
 }

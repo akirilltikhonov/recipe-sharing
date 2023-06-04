@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -79,5 +80,16 @@ class RecipeControllerTest {
         doReturn(recipeDto).when(recipeResponseMapper).toRecipeDto(recipe);
 
         assertThat(recipeController.delete(1L)).isEqualTo(ResponseEntity.ok(recipeDto));
+    }
+
+    @Test
+    void getByUser() {
+        String username = "username";
+        var recipes = List.of(Recipe.builder().username("username").build());
+        doReturn(recipes).when(recipeManagement).getByUser(username);
+        var recipeDtos = List.of(RecipeDto.builder().username("username").build());
+        doReturn(recipeDtos).when(recipeResponseMapper).toRecipeDtos(recipes);
+
+        assertThat(recipeController.getByUser(username)).isEqualTo(ResponseEntity.ok(recipeDtos));
     }
 }
