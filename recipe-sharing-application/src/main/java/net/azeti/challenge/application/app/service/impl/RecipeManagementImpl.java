@@ -27,7 +27,9 @@ public class RecipeManagementImpl implements RecipeManagement {
 
     @Override
     public Recipe update(Long id, Recipe recipe) {
-        return null;
+        return recipeRepository.update(recipe.toBuilder()
+                .recipeId(id)
+                .build());
     }
 
     @Override

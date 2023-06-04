@@ -11,6 +11,8 @@ public interface RecipeRepository {
 
     Optional<Recipe> getById(Long id);
 
+    Recipe update(Recipe recipe);
+
     Recipe delete(Long id);
 
     List<Recipe> getByUser(String username);

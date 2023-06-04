@@ -46,6 +46,13 @@ class RecipeManagementImplTest {
 
     @Test
     void update() {
+        Long recipeId = 1L;
+        var recipe = Recipe.builder().build();
+
+        var recipeToUpdate = Recipe.builder().recipeId(recipeId).build();
+        doReturn(recipeToUpdate).when(recipeRepository).update(recipeToUpdate);
+
+        assertThat(recipeManagement.update(recipeId, recipe)).isEqualTo(recipeToUpdate);
     }
 
     @Test

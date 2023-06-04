@@ -33,6 +33,14 @@ public class RecipeRepositoryImpl implements RecipeRepository {
 
     @Override
     @Transactional
+    public Recipe update(Recipe recipe) {
+        recipeJpaRepository.findById(recipe.getRecipeId()).orElseThrow();
+        var toUpdate = recipeMapper.toRecipeEntity(recipe);
+        return recipeMapper.toRecipe(recipeJpaRepository.save(toUpdate));
+    }
+
+    @Override
+    @Transactional
     public Recipe delete(Long id) {
         var recipe = recipeMapper.toRecipe(recipeJpaRepository.findById(id)
                 .orElseThrow());

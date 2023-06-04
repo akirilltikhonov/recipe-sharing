@@ -2,6 +2,7 @@ package net.azeti.challenge.application.integrationtest.layer.jpa.test.repositor
 
 import net.azeti.challenge.application.app.port.repository.RecipeRepository;
 import net.azeti.challenge.application.domain.Recipe;
+import net.azeti.challenge.application.domain.enums.Unit;
 import net.azeti.challenge.application.infra.jpa.mapper.RecipeMapper;
 import net.azeti.challenge.application.infra.jpa.repository.RecipeJpaRepository;
 import net.azeti.challenge.application.integrationtest.generator.IngredientEntityGenerator;
@@ -10,10 +11,13 @@ import net.azeti.challenge.application.integrationtest.generator.pattern.RecipeP
 import net.azeti.challenge.application.integrationtest.layer.jpa.ApplicationJpaTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -34,6 +38,7 @@ public class RecipeRepositoryTest extends ApplicationJpaTest {
     private Recipe recipeToByUser1;
     private Recipe recipeToByUser2;
     private Recipe recipeToByUser3;
+    private Recipe recipeForUpdate;
 
     @PostConstruct
     void setUp() {
@@ -48,12 +53,19 @@ public class RecipeRepositoryTest extends ApplicationJpaTest {
                 .usingRecursiveComparison()
                 .isEqualTo(recipe);
 
+        var recipeEntityToUpdate = recipeEntityGenerator.nextRecipeEntity();
+        recipeEntityToUpdate.addIngredient(ingredientEntityGenerator.nextIngredientEntity());
+        recipeEntityToUpdate.addIngredient(ingredientEntityGenerator.nextIngredientEntity());
+        recipeEntityToUpdate.addIngredient(ingredientEntityGenerator.nextIngredientEntity());
+        recipeEntityToUpdate = recipeJpaRepository.save(recipeEntityToUpdate);
+        recipeForUpdate = recipeRepository.getById(recipeEntityToUpdate.getRecipeId())
+                .orElseThrow();
+
         var recipeEntityToDelete = recipeEntityGenerator.nextRecipeEntity();
         recipeEntityToDelete.addIngredient(ingredientEntityGenerator.nextIngredientEntity());
         recipeEntityToDelete = recipeJpaRepository.save(recipeEntityToDelete);
         recipeToDelete = recipeRepository.getById(recipeEntityToDelete.getRecipeId())
                 .orElseThrow();
-
 
         var usernamePattern = RecipePattern.builder()
                 .username(UUID.randomUUID().toString())
@@ -106,6 +118,54 @@ public class RecipeRepositoryTest extends ApplicationJpaTest {
     }
 
     @Test
+    void update() {
+        var ingredientsForUpdate = recipeForUpdate.getIngredients();
+        var ingredientToUpdate1 = ingredientsForUpdate.get(0).toBuilder()
+                .ingredientId(null)
+                .value(10000000000f)
+                .build();
+        var ingredientToUpdate2 = ingredientsForUpdate.get(1).toBuilder()
+                .value(1000F)
+                .unit(Unit.ML)
+                .type("milk")
+                .build();
+        var recipeToUpdate = recipeForUpdate.toBuilder()
+                .instructions("newInstructions")
+                .servings(4)
+                .ingredients(List.of(ingredientToUpdate1, ingredientToUpdate2))
+                .build();
+
+        var updated = recipeRepository.update(recipeToUpdate);
+
+        assertThat(updated)
+                .usingRecursiveComparison()
+                .ignoringFields("ingredients")
+                .isEqualTo(recipeToUpdate);
+
+        assertThat(updated.getIngredients())
+                .hasSize(2)
+                .doesNotContain(ingredientsForUpdate.get(2))
+                .contains(ingredientToUpdate2);
+        var newIngredient = updated.getIngredients().stream()
+                .filter(i -> !i.getIngredientId().equals(ingredientToUpdate2.getIngredientId()))
+                .collect(Collectors.toList());
+        assertThat(newIngredient).hasSize(1);
+        assertThat(newIngredient.iterator().next())
+                .usingRecursiveComparison()
+                .ignoringFields("ingredientId")
+                .isEqualTo(ingredientToUpdate1);
+        assertThat(newIngredient.iterator().next().getIngredientId()).isNotNull();
+    }
+
+    @Test
+    void updateNotFound() {
+        assertThatThrownBy(() -> recipeRepository.update(recipeForUpdate.toBuilder().recipeId(null).build()))
+                .isInstanceOf(InvalidDataAccessApiUsageException.class);
+        assertThatThrownBy(() -> recipeRepository.update(recipeForUpdate.toBuilder().recipeId(999999999999999999L).build()))
+                .isInstanceOf(NoSuchElementException.class);
+    }
+
+    @Test
     void delete() {
         assertThat(recipeRepository.delete(recipeToDelete.getRecipeId()))
                 .isEqualTo(recipeToDelete);
@@ -113,7 +173,10 @@ public class RecipeRepositoryTest extends ApplicationJpaTest {
 
     @Test
     void deleteNotFound() {
-        assertThatThrownBy(() -> recipeRepository.delete(999999999999999999L));
+        assertThatThrownBy(() -> recipeRepository.delete(null))
+                .isInstanceOf(InvalidDataAccessApiUsageException.class);
+        assertThatThrownBy(() -> recipeRepository.delete(999999999999999999L))
+                .isInstanceOf(NoSuchElementException.class);
     }
 
     @Test
