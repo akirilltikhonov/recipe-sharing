@@ -70,4 +70,14 @@ class RecipeControllerTest {
 
         assertThat(recipeController.update(1L, updateRecipeDto)).isEqualTo(ResponseEntity.ok(recipeDto));
     }
+
+    @Test
+    void delete() {
+        var recipe = Recipe.builder().recipeId(1L).build();
+        doReturn(recipe).when(recipeManagement).delete(1L);
+        var recipeDto = RecipeDto.builder().recipeId(1L).build();
+        doReturn(recipeDto).when(recipeResponseMapper).toRecipeDto(recipe);
+
+        assertThat(recipeController.delete(1L)).isEqualTo(ResponseEntity.ok(recipeDto));
+    }
 }

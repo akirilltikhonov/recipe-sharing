@@ -9,6 +9,7 @@ import net.azeti.challenge.application.infra.api.rest.mapper.request.RecipeReque
 import net.azeti.challenge.application.infra.api.rest.mapper.response.RecipeResponseMapper;
 import net.azeti.challenge.client.RecipeControllerApi;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,10 +42,16 @@ public class RecipeController implements RecipeControllerApi {
         return ResponseEntity.ok(recipeResponseMapper.toRecipeDto(recipe));
     }
 
-    @PutMapping("/update/{recipeId}")
+    @PutMapping("/{recipeId}")
     public ResponseEntity<RecipeDto> update(@PathVariable Long recipeId, @RequestBody @Valid UpdateRecipeDto updateRecipeDto) {
         var recipe = recipeRequestMapper.toRecipe(updateRecipeDto);
         var updatedRecipe = recipeManagement.update(recipeId, recipe);
         return ResponseEntity.ok(recipeResponseMapper.toRecipeDto(updatedRecipe));
+    }
+
+    @DeleteMapping("/{recipeId}")
+    public ResponseEntity<RecipeDto> delete(@PathVariable Long recipeId) {
+        var deletedRecipe = recipeManagement.delete(recipeId);
+        return ResponseEntity.ok(recipeResponseMapper.toRecipeDto(deletedRecipe));
     }
 }

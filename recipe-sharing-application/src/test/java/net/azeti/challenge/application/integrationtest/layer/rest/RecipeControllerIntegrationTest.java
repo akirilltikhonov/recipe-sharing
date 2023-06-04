@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
@@ -82,9 +83,25 @@ class RecipeControllerIntegrationTest {
         String jsonRequest = objectMapper.writeValueAsString(updateRecipeDto);
         String expectedResponse = objectMapper.writeValueAsString(recipeDto);
 
-        var response = mockMvc.perform(put(BASE_PATH + "/update/" + recipeId)
+        var response = mockMvc.perform(put(BASE_PATH + recipeId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonRequest))
+                .andExpect(status().isOk())
+                .andReturn().getResponse();
+        assertThat(response.getContentAsString()).isEqualTo(expectedResponse);
+    }
+
+    @Test
+    void delete() throws Exception {
+        Long recipeId = 999L;
+        var recipeDto = RecipeDto.builder().recipeId(999L).build();
+        doReturn(ResponseEntity.ok(recipeDto)).when(controller)
+                .delete(recipeId);
+
+        String expectedResponse = objectMapper.writeValueAsString(recipeDto);
+
+        var response = mockMvc.perform(MockMvcRequestBuilders.delete(BASE_PATH + recipeDto.recipeId())
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
         assertThat(response.getContentAsString()).isEqualTo(expectedResponse);
