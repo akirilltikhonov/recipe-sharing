@@ -1,14 +1,21 @@
 package net.azeti.challenge.application.domain;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Builder;
+import lombok.Value;
 
-@Getter
-@Setter
+import java.util.ArrayList;
+import java.util.List;
+
+@Value
+@Builder(toBuilder = true)
 public class Recipe {
-    private Long id;
-    private String title;
-    private String username;
-    private String description;
-    //... rest of attributes.
+
+    Long recipeId;
+    String title;
+    String username;
+    String description;
+    String instructions;
+    Integer servings;
+    @Builder.Default
+    List<Ingredient> ingredients = new ArrayList<>();
 }

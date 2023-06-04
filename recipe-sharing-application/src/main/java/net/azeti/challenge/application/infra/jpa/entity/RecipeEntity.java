@@ -45,7 +45,7 @@ public class RecipeEntity {
 
     @OneToMany(
             cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY,
+            fetch = FetchType.EAGER,
             mappedBy = "recipe",
             orphanRemoval = true)
     private List<IngredientEntity> ingredients = new ArrayList<>();
@@ -58,5 +58,9 @@ public class RecipeEntity {
     public void removeIngredient(IngredientEntity ingredient) {
         ingredients.remove(ingredient);
         ingredient.setRecipe(null);
+    }
+
+    public void linkIngredients(List<IngredientEntity> ingredients) {
+        ingredients.forEach(i -> i.setRecipe(this));
     }
 }

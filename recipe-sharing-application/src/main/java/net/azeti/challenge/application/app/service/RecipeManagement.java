@@ -1,4 +1,4 @@
-package net.azeti.challenge.application.app;
+package net.azeti.challenge.application.app.service;
 
 import net.azeti.challenge.application.domain.Recipe;
 
@@ -10,11 +10,11 @@ public interface RecipeManagement {
 
     Recipe create(Recipe recipe);
 
-    Optional<Recipe> getById(Long id);
+    Optional<Recipe> getById(Long recipeId);
 
-    Recipe update(Long id, Recipe recipe);
+    Recipe update(Long recipeId, Recipe recipe);
 
-    Recipe delete(Long id);
+    Recipe delete(Long recipeId);
 
     List<Recipe> getByUser(String username);
 }
