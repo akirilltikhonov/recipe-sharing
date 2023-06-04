@@ -13,6 +13,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
 
@@ -41,5 +43,15 @@ class RecipeControllerTest {
         doReturn(recipeDto).when(recipeResponseMapper).toRecipeDto(recipe.toBuilder().build());
 
         assertThat(recipeController.create(createRecipeDto)).isEqualTo(ResponseEntity.ok(recipeDto));
+    }
+
+    @Test
+    void getById() {
+        var recipe = Recipe.builder().recipeId(1L).build();
+        doReturn(Optional.of(recipe)).when(recipeManagement).getById(1L);
+        var recipeDto = RecipeDto.builder().recipeId(1L).build();
+        doReturn(recipeDto).when(recipeResponseMapper).toRecipeDto(recipe.toBuilder().build());
+
+        assertThat(recipeController.getById(1L)).isEqualTo(ResponseEntity.ok(recipeDto));
     }
 }

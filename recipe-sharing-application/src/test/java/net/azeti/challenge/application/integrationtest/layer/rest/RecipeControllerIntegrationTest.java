@@ -16,13 +16,14 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = {RecipeController.class})
 class RecipeControllerIntegrationTest {
-    private static final String BASE_PATH = "/recipe-sharing/recipes";
+    private static final String BASE_PATH = "/recipe-sharing/recipes/";
 
     @Autowired
     protected ObjectMapper objectMapper;
@@ -44,9 +45,24 @@ class RecipeControllerIntegrationTest {
         String jsonRequest = objectMapper.writeValueAsString(createRecipeDto);
         String expectedResponse = objectMapper.writeValueAsString(recipeDto);
 
-        var response = mockMvc.perform(post(BASE_PATH + "/create")
+        var response = mockMvc.perform(post(BASE_PATH + "create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonRequest))
+                .andExpect(status().isOk())
+                .andReturn().getResponse();
+        assertThat(response.getContentAsString()).isEqualTo(expectedResponse);
+    }
+
+    @Test
+    void getById() throws Exception {
+        var recipeDto = RecipeDto.builder().recipeId(999L).build();
+        doReturn(ResponseEntity.ok(recipeDto)).when(controller)
+                .getById(recipeDto.recipeId());
+
+        String expectedResponse = objectMapper.writeValueAsString(recipeDto);
+
+        var response = mockMvc.perform(get(BASE_PATH + recipeDto.recipeId())
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
         assertThat(response.getContentAsString()).isEqualTo(expectedResponse);
