@@ -1,6 +1,7 @@
 package net.azeti.challenge.application.infra.api.rest.mapper.request;
 
 import net.azeti.challenge.api.dto.CreateRecipeDto;
+import net.azeti.challenge.api.dto.UpdateRecipeDto;
 import net.azeti.challenge.application.domain.Recipe;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
@@ -18,4 +19,7 @@ public interface RecipeRequestMapper {
 
     @Mapping(target = "recipeId", ignore = true)
     Recipe toRecipe(CreateRecipeDto createRecipeDto);
+
+    @Mapping(target = "recipeId", ignore = true)
+    Recipe toRecipe(UpdateRecipeDto updateRecipeDto);
 }
