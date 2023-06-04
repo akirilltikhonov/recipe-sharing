@@ -4,6 +4,8 @@ You can run test and application from root recipe-sharing using:
 ```
 ./mvnw test
 ```
+For integration test you need switch on docker for postgres testcontainer.
+You can turn off such testes by "testcontainers.enabled: false"
 ```
 ./mvnw clean spring-boot:run
 ```

@@ -1,0 +1,14 @@
+{
+  "title": "title",
+  "username": "username",
+  "description": null,
+  "instructions": "instructions",
+  "servings": 1,
+  "ingredients": [
+    {
+      "value": 100,
+      "unit": "ML",
+      "type": "milk"
+    }
+  ]
+}
