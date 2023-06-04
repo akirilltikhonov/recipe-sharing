@@ -3,6 +3,7 @@ package net.azeti.challenge.application.infra.api.rest.controller;
 import lombok.RequiredArgsConstructor;
 import net.azeti.challenge.api.dto.CreateRecipeDto;
 import net.azeti.challenge.api.dto.RecipeDto;
+import net.azeti.challenge.api.dto.UpdateRecipeDto;
 import net.azeti.challenge.application.app.service.RecipeManagement;
 import net.azeti.challenge.application.infra.api.rest.mapper.request.RecipeRequestMapper;
 import net.azeti.challenge.application.infra.api.rest.mapper.response.RecipeResponseMapper;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,5 +39,12 @@ public class RecipeController implements RecipeControllerApi {
     public ResponseEntity<RecipeDto> getById(@PathVariable Long recipeId) {
         var recipe = recipeManagement.getById(recipeId).orElseThrow();
         return ResponseEntity.ok(recipeResponseMapper.toRecipeDto(recipe));
+    }
+
+    @PutMapping("/update/{recipeId}")
+    public ResponseEntity<RecipeDto> update(@PathVariable Long recipeId, @RequestBody @Valid UpdateRecipeDto updateRecipeDto) {
+        var recipe = recipeRequestMapper.toRecipe(updateRecipeDto);
+        var updatedRecipe = recipeManagement.update(recipeId, recipe);
+        return ResponseEntity.ok(recipeResponseMapper.toRecipeDto(updatedRecipe));
     }
 }

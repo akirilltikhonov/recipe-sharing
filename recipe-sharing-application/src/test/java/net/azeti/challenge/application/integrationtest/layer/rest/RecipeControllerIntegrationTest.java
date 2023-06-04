@@ -3,6 +3,7 @@ package net.azeti.challenge.application.integrationtest.layer.rest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.azeti.challenge.api.dto.CreateRecipeDto;
 import net.azeti.challenge.api.dto.RecipeDto;
+import net.azeti.challenge.api.dto.UpdateRecipeDto;
 import net.azeti.challenge.application.infra.api.rest.controller.RecipeController;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -63,6 +65,26 @@ class RecipeControllerIntegrationTest {
 
         var response = mockMvc.perform(get(BASE_PATH + recipeDto.recipeId())
                         .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse();
+        assertThat(response.getContentAsString()).isEqualTo(expectedResponse);
+    }
+
+    @Test
+    void update() throws Exception {
+        Long recipeId = 999L;
+        var updateRecipeDto = UpdateRecipeDto.builder().build();
+
+        var recipeDto = RecipeDto.builder().recipeId(recipeId).build();
+        doReturn(ResponseEntity.ok(recipeDto)).when(controller)
+                .update(recipeId, updateRecipeDto);
+
+        String jsonRequest = objectMapper.writeValueAsString(updateRecipeDto);
+        String expectedResponse = objectMapper.writeValueAsString(recipeDto);
+
+        var response = mockMvc.perform(put(BASE_PATH + "/update/" + recipeId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
         assertThat(response.getContentAsString()).isEqualTo(expectedResponse);

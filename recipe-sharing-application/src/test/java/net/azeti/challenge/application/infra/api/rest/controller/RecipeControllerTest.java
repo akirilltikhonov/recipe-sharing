@@ -2,6 +2,7 @@ package net.azeti.challenge.application.infra.api.rest.controller;
 
 import net.azeti.challenge.api.dto.CreateRecipeDto;
 import net.azeti.challenge.api.dto.RecipeDto;
+import net.azeti.challenge.api.dto.UpdateRecipeDto;
 import net.azeti.challenge.application.app.service.RecipeManagement;
 import net.azeti.challenge.application.domain.Recipe;
 import net.azeti.challenge.application.infra.api.rest.mapper.request.RecipeRequestMapper;
@@ -40,7 +41,7 @@ class RecipeControllerTest {
         var createdRecipe = recipe.toBuilder().recipeId(1L).build();
         doReturn(createdRecipe).when(recipeManagement).create(recipe);
         var recipeDto = RecipeDto.builder().recipeId(1L).build();
-        doReturn(recipeDto).when(recipeResponseMapper).toRecipeDto(recipe.toBuilder().build());
+        doReturn(recipeDto).when(recipeResponseMapper).toRecipeDto(createdRecipe);
 
         assertThat(recipeController.create(createRecipeDto)).isEqualTo(ResponseEntity.ok(recipeDto));
     }
@@ -53,5 +54,20 @@ class RecipeControllerTest {
         doReturn(recipeDto).when(recipeResponseMapper).toRecipeDto(recipe.toBuilder().build());
 
         assertThat(recipeController.getById(1L)).isEqualTo(ResponseEntity.ok(recipeDto));
+    }
+
+    @Test
+    void update() {
+        var updateRecipeDto = UpdateRecipeDto.builder()
+                .build();
+
+        var recipe = Recipe.builder().build();
+        doReturn(recipe).when(recipeRequestMapper).toRecipe(updateRecipeDto);
+        var updatedRecipe = recipe.toBuilder().recipeId(1L).build();
+        doReturn(updatedRecipe).when(recipeManagement).update(1L, recipe);
+        var recipeDto = RecipeDto.builder().recipeId(1L).build();
+        doReturn(recipeDto).when(recipeResponseMapper).toRecipeDto(updatedRecipe);
+
+        assertThat(recipeController.update(1L, updateRecipeDto)).isEqualTo(ResponseEntity.ok(recipeDto));
     }
 }
