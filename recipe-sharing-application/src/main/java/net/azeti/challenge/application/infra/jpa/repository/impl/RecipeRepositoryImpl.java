@@ -25,7 +25,6 @@ public class RecipeRepositoryImpl implements RecipeRepository {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Optional<Recipe> getById(Long id) {
         return recipeJpaRepository.findById(id)
                 .map(recipeMapper::toRecipe);
@@ -40,7 +39,6 @@ public class RecipeRepositoryImpl implements RecipeRepository {
     }
 
     @Override
-    @Transactional
     public Recipe delete(Long id) {
         var recipe = recipeMapper.toRecipe(recipeJpaRepository.findById(id)
                 .orElseThrow());
@@ -49,7 +47,6 @@ public class RecipeRepositoryImpl implements RecipeRepository {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<Recipe> getByUser(String username) {
         return recipeMapper.toRecipes(recipeJpaRepository.findByUsername(username));
     }
