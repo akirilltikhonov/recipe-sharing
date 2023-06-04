@@ -9,11 +9,11 @@ public interface RecipeRepository {
 
     Recipe create(Recipe recipe);
 
-    Optional<Recipe> getById(Long id);
+    Optional<Recipe> getById(Long recipeId);
 
     Recipe update(Recipe recipe);
 
-    Recipe delete(Long id);
+    Recipe delete(Long recipeId);
 
     List<Recipe> getByUser(String username);
 }

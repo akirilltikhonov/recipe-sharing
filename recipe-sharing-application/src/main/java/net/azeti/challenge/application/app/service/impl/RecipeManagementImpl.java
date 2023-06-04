@@ -21,20 +21,20 @@ public class RecipeManagementImpl implements RecipeManagement {
     }
 
     @Override
-    public Optional<Recipe> getById(Long id) {
-        return recipeRepository.getById(id);
+    public Optional<Recipe> getById(Long recipeId) {
+        return recipeRepository.getById(recipeId);
     }
 
     @Override
-    public Recipe update(Long id, Recipe recipe) {
+    public Recipe update(Long recipeId, Recipe recipe) {
         return recipeRepository.update(recipe.toBuilder()
-                .recipeId(id)
+                .recipeId(recipeId)
                 .build());
     }
 
     @Override
-    public Recipe delete(Long id) {
-        return recipeRepository.delete(id);
+    public Recipe delete(Long recipeId) {
+        return recipeRepository.delete(recipeId);
     }
 
     @Override
