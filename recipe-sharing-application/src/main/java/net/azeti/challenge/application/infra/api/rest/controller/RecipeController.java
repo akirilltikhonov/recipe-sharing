@@ -3,8 +3,10 @@ package net.azeti.challenge.application.infra.api.rest.controller;
 import lombok.RequiredArgsConstructor;
 import net.azeti.challenge.api.dto.CreateRecipeDto;
 import net.azeti.challenge.api.dto.RecipeDto;
+import net.azeti.challenge.api.dto.RecipeFilterDto;
 import net.azeti.challenge.api.dto.UpdateRecipeDto;
 import net.azeti.challenge.application.app.service.RecipeManagement;
+import net.azeti.challenge.application.app.service.RecipeSearch;
 import net.azeti.challenge.application.infra.api.rest.mapper.request.RecipeRequestMapper;
 import net.azeti.challenge.application.infra.api.rest.mapper.response.RecipeResponseMapper;
 import net.azeti.challenge.client.RecipeControllerApi;
@@ -31,6 +33,7 @@ public class RecipeController implements RecipeControllerApi {
 
     private final RecipeRequestMapper recipeRequestMapper;
     private final RecipeManagement recipeManagement;
+    private final RecipeSearch recipeSearch;
     private final RecipeResponseMapper recipeResponseMapper;
 
     @PostMapping(value = "/create")
@@ -62,6 +65,13 @@ public class RecipeController implements RecipeControllerApi {
     @GetMapping("/search/username/{username}")
     public ResponseEntity<List<RecipeDto>> getByUser(@PathVariable @NotNull String username) {
         var recipes = recipeManagement.getByUser(username);
+        return ResponseEntity.ok(recipeResponseMapper.toRecipeDtos(recipes));
+    }
+
+    @PostMapping(value = "/search/filter")
+    public ResponseEntity<List<RecipeDto>> findByFilter(@RequestBody @Valid RecipeFilterDto recipeFilterDto) {
+        var filter = recipeRequestMapper.toRecipeFilter(recipeFilterDto);
+        var recipes = recipeSearch.recipesByFilter(filter);
         return ResponseEntity.ok(recipeResponseMapper.toRecipeDtos(recipes));
     }
 }

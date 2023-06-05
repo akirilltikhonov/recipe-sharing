@@ -1,9 +1,13 @@
 package net.azeti.challenge.application.integrationtest.layer.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import net.azeti.challenge.api.dto.CreateIngredientDto;
 import net.azeti.challenge.api.dto.CreateRecipeDto;
+import net.azeti.challenge.api.dto.IngredientDto;
 import net.azeti.challenge.api.dto.RecipeDto;
+import net.azeti.challenge.api.dto.RecipeFilterDto;
 import net.azeti.challenge.api.dto.UpdateRecipeDto;
+import net.azeti.challenge.api.enums.Unit;
 import net.azeti.challenge.application.infra.api.rest.controller.RecipeController;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,7 +45,18 @@ class RecipeControllerIntegrationTest {
 
     @Test
     void create() throws Exception {
-        var createRecipeDto = CreateRecipeDto.builder().build();
+        var createRecipeDto = CreateRecipeDto.builder()
+                .title("title")
+                .username("username")
+                .description("description")
+                .instructions("instructions")
+                .servings(1)
+                .ingredients(List.of(CreateIngredientDto.builder()
+                        .value(1000f)
+                        .unit(Unit.ML)
+                        .type("type")
+                        .build()))
+                .build();
 
         var recipeDto = RecipeDto.builder().build();
         doReturn(ResponseEntity.ok(recipeDto)).when(controller)
@@ -76,7 +91,18 @@ class RecipeControllerIntegrationTest {
     @Test
     void update() throws Exception {
         Long recipeId = 999L;
-        var updateRecipeDto = UpdateRecipeDto.builder().build();
+        var updateRecipeDto = UpdateRecipeDto.builder()
+                .title("title")
+                .username("username")
+                .description("description")
+                .instructions("instructions")
+                .servings(1)
+                .ingredients(List.of(IngredientDto.builder()
+                        .value(1000f)
+                        .unit(Unit.ML)
+                        .type("type")
+                        .build()))
+                .build();
 
         var recipeDto = RecipeDto.builder().recipeId(recipeId).build();
         doReturn(ResponseEntity.ok(recipeDto)).when(controller)
@@ -120,6 +146,26 @@ class RecipeControllerIntegrationTest {
 
         var response = mockMvc.perform(get(BASE_PATH + "search/username/" + username)
                         .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse();
+        assertThat(response.getContentAsString()).isEqualTo(expectedResponse);
+    }
+
+    @Test
+    void findByFilter() throws Exception {
+        var recipeFilterDto = RecipeFilterDto.builder()
+                .build();
+
+        var recipes = List.of(RecipeDto.builder().build());
+        doReturn(ResponseEntity.ok(recipes)).when(controller)
+                .findByFilter(recipeFilterDto);
+
+        String jsonRequest = objectMapper.writeValueAsString(recipeFilterDto);
+        String expectedResponse = objectMapper.writeValueAsString(recipes);
+
+        var response = mockMvc.perform(post(BASE_PATH + "search/filter")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
         assertThat(response.getContentAsString()).isEqualTo(expectedResponse);
