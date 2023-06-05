@@ -2,9 +2,12 @@ package net.azeti.challenge.application.infra.api.rest.controller;
 
 import net.azeti.challenge.api.dto.CreateRecipeDto;
 import net.azeti.challenge.api.dto.RecipeDto;
+import net.azeti.challenge.api.dto.RecipeFilterDto;
 import net.azeti.challenge.api.dto.UpdateRecipeDto;
 import net.azeti.challenge.application.app.service.RecipeManagement;
+import net.azeti.challenge.application.app.service.RecipeSearch;
 import net.azeti.challenge.application.domain.Recipe;
+import net.azeti.challenge.application.domain.filter.RecipeFilter;
 import net.azeti.challenge.application.infra.api.rest.mapper.request.RecipeRequestMapper;
 import net.azeti.challenge.application.infra.api.rest.mapper.response.RecipeResponseMapper;
 import org.junit.jupiter.api.Test;
@@ -29,6 +32,8 @@ class RecipeControllerTest {
     private RecipeRequestMapper recipeRequestMapper;
     @Mock
     private RecipeManagement recipeManagement;
+    @Mock
+    private RecipeSearch recipeSearch;
     @Mock
     private RecipeResponseMapper recipeResponseMapper;
 
@@ -91,5 +96,19 @@ class RecipeControllerTest {
         doReturn(recipeDtos).when(recipeResponseMapper).toRecipeDtos(recipes);
 
         assertThat(recipeController.getByUser(username)).isEqualTo(ResponseEntity.ok(recipeDtos));
+    }
+
+    @Test
+    void findByFilter() {
+        var filterDto = RecipeFilterDto.builder().build();
+
+        var filter = RecipeFilter.builder().build();
+        doReturn(filter).when(recipeRequestMapper).toRecipeFilter(filterDto);
+        var recipes = List.of(Recipe.builder().username("username").build());
+        doReturn(recipes).when(recipeSearch).recipesByFilter(filter);
+        var recipeDtos = List.of(RecipeDto.builder().username("username").build());
+        doReturn(recipeDtos).when(recipeResponseMapper).toRecipeDtos(recipes);
+
+        assertThat(recipeController.findByFilter(filterDto)).isEqualTo(ResponseEntity.ok(recipeDtos));
     }
 }

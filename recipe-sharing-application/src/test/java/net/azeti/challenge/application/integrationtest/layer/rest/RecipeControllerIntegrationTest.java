@@ -5,6 +5,7 @@ import net.azeti.challenge.api.dto.CreateIngredientDto;
 import net.azeti.challenge.api.dto.CreateRecipeDto;
 import net.azeti.challenge.api.dto.IngredientDto;
 import net.azeti.challenge.api.dto.RecipeDto;
+import net.azeti.challenge.api.dto.RecipeFilterDto;
 import net.azeti.challenge.api.dto.UpdateRecipeDto;
 import net.azeti.challenge.api.enums.Unit;
 import net.azeti.challenge.application.infra.api.rest.controller.RecipeController;
@@ -145,6 +146,26 @@ class RecipeControllerIntegrationTest {
 
         var response = mockMvc.perform(get(BASE_PATH + "search/username/" + username)
                         .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse();
+        assertThat(response.getContentAsString()).isEqualTo(expectedResponse);
+    }
+
+    @Test
+    void findByFilter() throws Exception {
+        var recipeFilterDto = RecipeFilterDto.builder()
+                .build();
+
+        var recipes = List.of(RecipeDto.builder().build());
+        doReturn(ResponseEntity.ok(recipes)).when(controller)
+                .findByFilter(recipeFilterDto);
+
+        String jsonRequest = objectMapper.writeValueAsString(recipeFilterDto);
+        String expectedResponse = objectMapper.writeValueAsString(recipes);
+
+        var response = mockMvc.perform(post(BASE_PATH + "search/filter")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
         assertThat(response.getContentAsString()).isEqualTo(expectedResponse);
