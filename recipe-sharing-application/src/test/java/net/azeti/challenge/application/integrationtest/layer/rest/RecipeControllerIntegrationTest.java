@@ -12,6 +12,7 @@ import net.azeti.challenge.application.infra.api.rest.controller.RecipeControlle
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -31,6 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = {RecipeController.class})
+@AutoConfigureMockMvc(addFilters = false)
 class RecipeControllerIntegrationTest {
     private static final String BASE_PATH = "/recipe-sharing/recipes/";
 

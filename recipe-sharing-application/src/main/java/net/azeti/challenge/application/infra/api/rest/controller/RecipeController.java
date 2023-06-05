@@ -11,6 +11,7 @@ import net.azeti.challenge.application.infra.api.rest.mapper.request.RecipeReque
 import net.azeti.challenge.application.infra.api.rest.mapper.response.RecipeResponseMapper;
 import net.azeti.challenge.client.RecipeControllerApi;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,6 +38,7 @@ public class RecipeController implements RecipeControllerApi {
     private final RecipeResponseMapper recipeResponseMapper;
 
     @PostMapping(value = "/create")
+    @PreAuthorize("hasAuthority('WRITE')")
     public ResponseEntity<RecipeDto> create(@RequestBody @Valid CreateRecipeDto createRecipeDto) {
         var recipe = recipeRequestMapper.toRecipe(createRecipeDto);
         recipe = recipeManagement.create(recipe);
@@ -44,12 +46,14 @@ public class RecipeController implements RecipeControllerApi {
     }
 
     @GetMapping("/{recipeId}")
+    @PreAuthorize("hasAuthority('READ')")
     public ResponseEntity<RecipeDto> getById(@PathVariable @NotNull Long recipeId) {
         var recipe = recipeManagement.getById(recipeId).orElseThrow();
         return ResponseEntity.ok(recipeResponseMapper.toRecipeDto(recipe));
     }
 
     @PutMapping("/{recipeId}")
+    @PreAuthorize("hasAuthority('WRITE')")
     public ResponseEntity<RecipeDto> update(@PathVariable @NotNull Long recipeId, @RequestBody @Valid UpdateRecipeDto updateRecipeDto) {
         var recipe = recipeRequestMapper.toRecipe(updateRecipeDto);
         var updatedRecipe = recipeManagement.update(recipeId, recipe);
@@ -57,18 +61,21 @@ public class RecipeController implements RecipeControllerApi {
     }
 
     @DeleteMapping("/{recipeId}")
+    @PreAuthorize("hasAuthority('WRITE')")
     public ResponseEntity<RecipeDto> delete(@PathVariable @NotNull Long recipeId) {
         var deletedRecipe = recipeManagement.delete(recipeId);
         return ResponseEntity.ok(recipeResponseMapper.toRecipeDto(deletedRecipe));
     }
 
     @GetMapping("/search/username/{username}")
+    @PreAuthorize("hasAuthority('READ')")
     public ResponseEntity<List<RecipeDto>> getByUser(@PathVariable @NotNull String username) {
         var recipes = recipeManagement.getByUser(username);
         return ResponseEntity.ok(recipeResponseMapper.toRecipeDtos(recipes));
     }
 
     @PostMapping(value = "/search/filter")
+    @PreAuthorize("hasAuthority('READ')")
     public ResponseEntity<List<RecipeDto>> findByFilter(@RequestBody @Valid RecipeFilterDto recipeFilterDto) {
         var filter = recipeRequestMapper.toRecipeFilter(recipeFilterDto);
         var recipes = recipeSearch.recipesByFilter(filter);

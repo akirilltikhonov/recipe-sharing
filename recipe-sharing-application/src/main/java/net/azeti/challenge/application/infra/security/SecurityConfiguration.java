@@ -1,8 +1,10 @@
 package net.azeti.challenge.application.infra.security;
 
+import net.azeti.challenge.application.infra.security.model.Role;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
@@ -13,6 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration {
 
     @Bean
@@ -29,9 +32,14 @@ public class SecurityConfiguration {
     public InMemoryUserDetailsManager inMemoryUserDetailsManager() {
         return new InMemoryUserDetailsManager(
                 User
-                        .withUsername("user")
-                        .password(passwordEncoder().encode("user"))
-                        .roles("ADMIN")
+                        .withUsername("ro")
+                        .password(passwordEncoder().encode("ro"))
+                        .authorities(Role.RO.getAuthorities())
+                        .build(),
+                User
+                        .withUsername("rw")
+                        .password(passwordEncoder().encode("rw"))
+                        .authorities(Role.RW.getAuthorities())
                         .build()
         );
     }

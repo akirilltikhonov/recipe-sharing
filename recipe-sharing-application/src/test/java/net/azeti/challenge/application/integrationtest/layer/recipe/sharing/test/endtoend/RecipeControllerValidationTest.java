@@ -9,6 +9,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import javax.validation.ConstraintViolationException;
 import java.io.File;
@@ -39,6 +40,7 @@ class RecipeControllerValidationTest extends ApplicationTest {
 
     @ParameterizedTest
     @MethodSource("isNotValidCreate")
+    @WithMockUser(authorities={"WRITE"})
     void isNotValidCreate(File file) throws IOException {
         var request = objectMapper.readValue(file, CreateRecipeDto.class);
         assertThatThrownBy(() -> recipeController.create(request))
@@ -47,6 +49,7 @@ class RecipeControllerValidationTest extends ApplicationTest {
 
     @ParameterizedTest
     @MethodSource("isValidCreate")
+    @WithMockUser(authorities={"WRITE"})
     void isValidCreate(File file) throws IOException {
         var request = objectMapper.readValue(file, CreateRecipeDto.class);
         assertThat(recipeController.create(request).getStatusCode())

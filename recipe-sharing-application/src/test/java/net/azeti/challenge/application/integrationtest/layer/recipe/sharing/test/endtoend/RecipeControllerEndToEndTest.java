@@ -9,6 +9,7 @@ import net.azeti.challenge.application.infra.api.rest.controller.RecipeControlle
 import net.azeti.challenge.application.integrationtest.layer.recipe.sharing.ApplicationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import java.util.List;
 import java.util.Objects;
@@ -22,6 +23,7 @@ class RecipeControllerEndToEndTest extends ApplicationTest {
     private RecipeController recipeController;
 
     @Test
+    @WithMockUser(authorities={"READ", "WRITE"})
     void createGetUpdateDelete() {
         String username = UUID.randomUUID().toString();
         var createIngredientDto1 = CreateIngredientDto.builder()
