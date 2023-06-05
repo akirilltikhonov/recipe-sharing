@@ -1,9 +1,12 @@
 package net.azeti.challenge.application.integrationtest.layer.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import net.azeti.challenge.api.dto.CreateIngredientDto;
 import net.azeti.challenge.api.dto.CreateRecipeDto;
+import net.azeti.challenge.api.dto.IngredientDto;
 import net.azeti.challenge.api.dto.RecipeDto;
 import net.azeti.challenge.api.dto.UpdateRecipeDto;
+import net.azeti.challenge.api.enums.Unit;
 import net.azeti.challenge.application.infra.api.rest.controller.RecipeController;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,7 +44,18 @@ class RecipeControllerIntegrationTest {
 
     @Test
     void create() throws Exception {
-        var createRecipeDto = CreateRecipeDto.builder().build();
+        var createRecipeDto = CreateRecipeDto.builder()
+                .title("title")
+                .username("username")
+                .description("description")
+                .instructions("instructions")
+                .servings(1)
+                .ingredients(List.of(CreateIngredientDto.builder()
+                        .value(1000f)
+                        .unit(Unit.ML)
+                        .type("type")
+                        .build()))
+                .build();
 
         var recipeDto = RecipeDto.builder().build();
         doReturn(ResponseEntity.ok(recipeDto)).when(controller)
@@ -76,7 +90,18 @@ class RecipeControllerIntegrationTest {
     @Test
     void update() throws Exception {
         Long recipeId = 999L;
-        var updateRecipeDto = UpdateRecipeDto.builder().build();
+        var updateRecipeDto = UpdateRecipeDto.builder()
+                .title("title")
+                .username("username")
+                .description("description")
+                .instructions("instructions")
+                .servings(1)
+                .ingredients(List.of(IngredientDto.builder()
+                        .value(1000f)
+                        .unit(Unit.ML)
+                        .type("type")
+                        .build()))
+                .build();
 
         var recipeDto = RecipeDto.builder().recipeId(recipeId).build();
         doReturn(ResponseEntity.ok(recipeDto)).when(controller)
