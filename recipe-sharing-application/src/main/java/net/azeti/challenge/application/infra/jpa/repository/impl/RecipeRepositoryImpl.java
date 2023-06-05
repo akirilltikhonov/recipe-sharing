@@ -3,6 +3,7 @@ package net.azeti.challenge.application.infra.jpa.repository.impl;
 import lombok.RequiredArgsConstructor;
 import net.azeti.challenge.application.app.port.repository.RecipeRepository;
 import net.azeti.challenge.application.domain.Recipe;
+import net.azeti.challenge.application.domain.filter.RecipeFilter;
 import net.azeti.challenge.application.infra.jpa.mapper.RecipeMapper;
 import net.azeti.challenge.application.infra.jpa.repository.RecipeJpaRepository;
 import org.springframework.stereotype.Service;
@@ -49,5 +50,10 @@ public class RecipeRepositoryImpl implements RecipeRepository {
     @Override
     public List<Recipe> getByUser(String username) {
         return recipeMapper.toRecipes(recipeJpaRepository.findByUsername(username));
+    }
+
+    @Override
+    public List<Recipe> findByFilter(RecipeFilter filter) {
+        return recipeMapper.toRecipes(recipeJpaRepository.findByFilter(filter));
     }
 }

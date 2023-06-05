@@ -1,6 +1,7 @@
 package net.azeti.challenge.application.infra.jpa.repository.impl;
 
 import net.azeti.challenge.application.domain.Recipe;
+import net.azeti.challenge.application.domain.filter.RecipeFilter;
 import net.azeti.challenge.application.infra.jpa.entity.RecipeEntity;
 import net.azeti.challenge.application.infra.jpa.mapper.RecipeMapper;
 import net.azeti.challenge.application.infra.jpa.repository.RecipeJpaRepository;
@@ -94,5 +95,18 @@ class RecipeRepositoryImplTest {
                 .build());
         doReturn(recipes).when(recipeMapper).toRecipes(recipeEntities);
         assertThat(recipeRepository.getByUser("name")).isEqualTo(recipes);
+    }
+
+    @Test
+    void findByFilter() {
+        var filter = RecipeFilter.builder().build();
+
+        var recipeEntities = List.of(recipeEntityGenerator.nextRecipeEntity());
+        doReturn(recipeEntities).when(recipeJpaRepository).findByFilter(filter);
+        var recipes = List.of(Recipe.builder()
+                .recipeId(1L)
+                .build());
+        doReturn(recipes).when(recipeMapper).toRecipes(recipeEntities);
+        assertThat(recipeRepository.findByFilter(RecipeFilter.builder().build())).isEqualTo(recipes);
     }
 }
