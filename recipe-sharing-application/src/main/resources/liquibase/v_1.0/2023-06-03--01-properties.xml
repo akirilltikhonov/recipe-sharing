@@ -7,6 +7,9 @@
     <property name="long_type" value="bigint" dbms="postgresql"/>
     <property name="long_type" value="long" dbms="h2"/>
 
+    <property name="uuid_type" value="uuid" dbms="postgresql"/>
+    <property name="uuid_type" value="VARCHAR(36)" dbms="h2"/>
+
     <property name="db_user" value="sa" dbms="h2"/>
 
     <property name="path_independent" value="path_independent"/>

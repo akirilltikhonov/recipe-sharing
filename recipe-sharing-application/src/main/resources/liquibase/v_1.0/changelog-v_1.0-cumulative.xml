@@ -12,4 +12,5 @@
     <include file="2023-06-03--04-add_enum_unit.xml" relativeToChangelogFile="true"/>
     <include file="2023-06-03--05-ingredient.xml" relativeToChangelogFile="true"/>
     <include file="2023-06-03--06-add_index_to_recipe_id.xml" relativeToChangelogFile="true"/>
+    <include file="2023-06-06--01-user.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>
