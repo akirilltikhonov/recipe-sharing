@@ -1,22 +1,25 @@
-package net.azeti.challenge.application.infra.security;
+package net.azeti.challenge.application.infra.security.config;
 
-import net.azeti.challenge.application.infra.security.model.Role;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+@RequiredArgsConstructor
 public class SecurityConfiguration {
+
+
+    private final UserDetailsService userDetailsServiceImpl;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -28,24 +31,15 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    @ConditionalOnMissingBean(UserDetailsService.class)
-    public InMemoryUserDetailsManager inMemoryUserDetailsManager() {
-        return new InMemoryUserDetailsManager(
-                User
-                        .withUsername("ro")
-                        .password(passwordEncoder().encode("ro"))
-                        .authorities(Role.RO.getAuthorities())
-                        .build(),
-                User
-                        .withUsername("rw")
-                        .password(passwordEncoder().encode("rw"))
-                        .authorities(Role.RW.getAuthorities())
-                        .build()
-        );
+    public DaoAuthenticationProvider daoAuthenticationProvider() {
+        var provider = new DaoAuthenticationProvider();
+        provider.setPasswordEncoder(bCryptPasswordEncoder());
+        provider.setUserDetailsService(userDetailsServiceImpl);
+        return provider;
     }
 
     @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    public PasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder(12);
     }
 }

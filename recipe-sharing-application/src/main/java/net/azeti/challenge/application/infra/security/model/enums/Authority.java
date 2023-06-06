@@ -1,4 +1,4 @@
-package net.azeti.challenge.application.infra.security.model;
+package net.azeti.challenge.application.infra.security.model.enums;
 
 import org.springframework.security.core.GrantedAuthority;
 
