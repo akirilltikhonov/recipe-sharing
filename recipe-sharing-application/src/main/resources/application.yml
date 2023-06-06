@@ -18,3 +18,9 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQL10Dialect
         hbm2ddl:
           auto: validate
+
+jwt:
+  header: Authorization
+  secret: secretKey
+  expiration: 720
+  api-name: JWT

@@ -8,3 +8,9 @@ spring:
         show_sql: true
 
 testcontainers.enabled: true
+
+jwt:
+  header: Authorization
+  secret: secretKey
+  expiration: 720
+  api-name: JWT
