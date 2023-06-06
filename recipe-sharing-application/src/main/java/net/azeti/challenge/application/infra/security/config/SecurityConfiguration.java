@@ -1,6 +1,7 @@
 package net.azeti.challenge.application.infra.security.config;
 
 import lombok.RequiredArgsConstructor;
+import net.azeti.challenge.application.infra.security.config.properties.SecurityConfigurationProperties;
 import net.azeti.challenge.application.infra.security.service.JwtTokenFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,6 +29,7 @@ public class SecurityConfiguration {
 
     private final UserDetailsService userDetailsServiceImpl;
     private final JwtTokenFilter jwtTokenFilter;
+    private final SecurityConfigurationProperties properties;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -37,7 +39,8 @@ public class SecurityConfiguration {
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     .and()
                 .authorizeRequests()
-                    .antMatchers("/recipe-sharing/authentication/login").permitAll()
+                    .antMatchers(properties.getPermitAllUrls()).permitAll()
+                    .antMatchers(properties.getSwaggerUrls()).permitAll()
                     .anyRequest().authenticated()
                     .and()
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
