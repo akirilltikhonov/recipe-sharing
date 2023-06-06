@@ -1,5 +1,6 @@
 package net.azeti.challenge.application.infra.api.rest.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import net.azeti.challenge.api.dto.CreateRecipeDto;
 import net.azeti.challenge.api.dto.RecipeDto;
@@ -30,6 +31,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/recipe-sharing/recipes")
+@SecurityRequirement(name = "Authorization")
 public class RecipeController implements RecipeControllerApi {
 
     private final RecipeRequestMapper recipeRequestMapper;
