@@ -54,8 +54,8 @@ class RecipeEntityGeneratorTest {
     @Test
     void nextRecipeEntityWithPatternAssertionError() {
         final RecipePattern pattern = RecipePattern.builder().build();
-        final RecipeEntity contract = generator.nextRecipeEntity(pattern);
-        assertThatThrownBy(() -> assertThat(pattern).usingRecursiveComparison().isEqualTo(contract))
+        final RecipeEntity recipe = generator.nextRecipeEntity(pattern);
+        assertThatThrownBy(() -> assertThat(pattern).usingRecursiveComparison().isEqualTo(recipe))
                 .isInstanceOf(AssertionError.class);
     }
 }

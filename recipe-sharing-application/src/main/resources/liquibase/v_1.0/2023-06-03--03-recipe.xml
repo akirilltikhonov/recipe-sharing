@@ -8,7 +8,7 @@
         <createTable tableName="recipes">
             <column name="recipe_id" type="${long_type}">
                 <constraints primaryKey="true"
-                             primaryKeyName="credit_contracts_pk"
+                             primaryKeyName="recipes_pk"
                              nullable="false"/>
             </column>
             <column name="title" type="text">
