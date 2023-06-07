@@ -13,9 +13,11 @@ import net.azeti.challenge.application.infra.security.service.JwtTokenFilter;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -36,7 +38,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc(addFilters = false)
 @MockBean(JwtTokenFilter.class)
 class RecipeControllerIntegrationTest {
+
     private static final String BASE_PATH = "/recipe-sharing/recipes/";
+    @Value("${access-token.non-expiring}")
+    private String accessToken;
 
     @Autowired
     protected ObjectMapper objectMapper;
@@ -51,7 +56,6 @@ class RecipeControllerIntegrationTest {
     void create() throws Exception {
         var createRecipeDto = CreateRecipeDto.builder()
                 .title("title")
-                .username("username")
                 .description("description")
                 .instructions("instructions")
                 .servings(1)
@@ -64,13 +68,14 @@ class RecipeControllerIntegrationTest {
 
         var recipeDto = RecipeDto.builder().build();
         doReturn(ResponseEntity.ok(recipeDto)).when(controller)
-                .create(createRecipeDto);
+                .create(createRecipeDto, accessToken);
 
         String jsonRequest = objectMapper.writeValueAsString(createRecipeDto);
         String expectedResponse = objectMapper.writeValueAsString(recipeDto);
 
         var response = mockMvc.perform(post(BASE_PATH + "create")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.AUTHORIZATION, accessToken)
                         .content(jsonRequest))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();

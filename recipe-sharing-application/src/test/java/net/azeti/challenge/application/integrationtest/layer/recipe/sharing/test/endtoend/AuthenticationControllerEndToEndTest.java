@@ -66,7 +66,6 @@ class AuthenticationControllerEndToEndTest extends ApplicationTest {
         headers.add(header, token.accessToken());
         var body = CreateRecipeDto.builder()
                 .title("Omelette")
-                .username(username)
                 .description("best ever")
                 .instructions("just add all")
                 .servings(1)
@@ -85,5 +84,7 @@ class AuthenticationControllerEndToEndTest extends ApplicationTest {
         assertThat(body)
                 .usingRecursiveComparison()
                 .isEqualTo(createResponse.getBody());
+        assertThat(createResponse.getBody().username())
+                .isEqualTo(username);
     }
 }

@@ -11,8 +11,6 @@ import java.util.List;
 public record CreateRecipeDto(
         @NotNull
         String title,
-        @NotNull
-        String username,
         String description,
         @NotNull
         String instructions,

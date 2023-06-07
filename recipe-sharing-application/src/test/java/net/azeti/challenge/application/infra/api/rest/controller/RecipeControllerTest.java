@@ -39,17 +39,18 @@ class RecipeControllerTest {
 
     @Test
     void create() {
+        String accessToken = "accessToken";
         var createRecipeDto = CreateRecipeDto.builder()
                 .build();
 
         var recipe = Recipe.builder().build();
-        doReturn(recipe).when(recipeRequestMapper).toRecipe(createRecipeDto);
+        doReturn(recipe).when(recipeRequestMapper).toRecipe(createRecipeDto, accessToken);
         var createdRecipe = recipe.toBuilder().recipeId(1L).build();
         doReturn(createdRecipe).when(recipeManagement).create(recipe);
         var recipeDto = RecipeDto.builder().recipeId(1L).build();
         doReturn(recipeDto).when(recipeResponseMapper).toRecipeDto(createdRecipe);
 
-        assertThat(recipeController.create(createRecipeDto)).isEqualTo(ResponseEntity.ok(recipeDto));
+        assertThat(recipeController.create(createRecipeDto, accessToken)).isEqualTo(ResponseEntity.ok(recipeDto));
     }
 
     @Test

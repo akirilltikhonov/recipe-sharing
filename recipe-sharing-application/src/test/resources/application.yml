@@ -18,3 +18,5 @@ security-configuration-properties:
   permit-all-urls:
     - /recipe-sharing/authentication/register
     - /recipe-sharing/authentication/login
+
+access-token.non-expiring: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0IiwiYXV0aG9yaXRpZXMiOlsiUkVBRCIsIldSSVRFIl0sImlhdCI6MTY4NjE0MTE1NCwiZXhwIjo4ODg2MTg0MzU0fQ.r2ZgaptJ_UsSvVZkQ6Sjs_PK_OK_kZR9pPWL-FtNdOo

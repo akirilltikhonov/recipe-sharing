@@ -9,11 +9,11 @@ import net.azeti.challenge.application.infra.api.rest.controller.RecipeControlle
 import net.azeti.challenge.application.integrationtest.layer.recipe.sharing.ApplicationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,11 +21,12 @@ class RecipeControllerEndToEndTest extends ApplicationTest {
 
     @Autowired
     private RecipeController recipeController;
+    @Value("${access-token.non-expiring}")
+    private String accessToken;
 
     @Test
     @WithMockUser(authorities={"READ", "WRITE"})
     void createGetUpdateDelete() {
-        String username = UUID.randomUUID().toString();
         var createIngredientDto1 = CreateIngredientDto.builder()
                 .value(1000f)
                 .unit(Unit.ML)
@@ -33,14 +34,13 @@ class RecipeControllerEndToEndTest extends ApplicationTest {
                 .build();
         var createRecipeDto = CreateRecipeDto.builder()
                 .title("Omelette")
-                .username(username)
                 .description("best ever")
                 .instructions("just add all")
                 .servings(1)
                 .ingredients(List.of(createIngredientDto1))
                 .build();
 
-        var recipe = recipeController.create(createRecipeDto).getBody();
+        var recipe = recipeController.create(createRecipeDto, accessToken).getBody();
         assertThat(createRecipeDto)
                 .usingRecursiveComparison()
                 .isEqualTo(recipe);
