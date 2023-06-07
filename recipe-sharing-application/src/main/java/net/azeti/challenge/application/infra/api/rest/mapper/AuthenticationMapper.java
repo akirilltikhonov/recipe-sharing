@@ -4,7 +4,7 @@ import net.azeti.challenge.api.dto.authentification.LoginDto;
 import net.azeti.challenge.api.dto.authentification.RegistrationDto;
 import net.azeti.challenge.api.dto.authentification.RegistrationResultDto;
 import net.azeti.challenge.api.dto.authentification.TokenDto;
-import net.azeti.challenge.application.app.port.gateway.PasswordEncoderAdapter;
+import net.azeti.challenge.application.app.port.gateway.PasswordEncoderGateway;
 import net.azeti.challenge.application.app.port.gateway.mapping.EncodePasswordEncoderAdapter;
 import net.azeti.challenge.application.domain.authentification.Login;
 import net.azeti.challenge.application.domain.authentification.Registration;
@@ -20,7 +20,7 @@ import org.mapstruct.ReportingPolicy;
         , unmappedTargetPolicy = ReportingPolicy.ERROR
         , unmappedSourcePolicy = ReportingPolicy.ERROR
         , injectionStrategy = InjectionStrategy.CONSTRUCTOR
-        , uses = PasswordEncoderAdapter.class
+        , uses = PasswordEncoderGateway.class
 )
 public interface AuthenticationMapper {
 
