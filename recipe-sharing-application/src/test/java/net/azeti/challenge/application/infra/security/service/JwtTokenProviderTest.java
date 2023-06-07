@@ -108,12 +108,12 @@ class JwtTokenProviderImplTest {
     }
 
     @Test
-    void getUserName() {
+    void getUsername() {
         String username = "John Doe";
         Collection<String> authorities = List.of("authority1", "authority2");
         String token = jwtTokenProvider.createToken(username, authorities);
 
-        String userName = jwtTokenProvider.getUserName(token);
+        String userName = jwtTokenProvider.getUsername(token);
         assertThat(userName).isEqualTo("John Doe");
     }
 

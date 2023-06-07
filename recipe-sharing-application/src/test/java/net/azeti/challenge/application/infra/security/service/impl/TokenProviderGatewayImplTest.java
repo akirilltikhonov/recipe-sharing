@@ -22,7 +22,7 @@ class TokenProviderGatewayImplTest {
     void getUsername() {
         String accessToken = "token";
         String username = "username";
-        doReturn(username).when(jwtTokenProvider).getUserName(accessToken);
+        doReturn(username).when(jwtTokenProvider).getUsername(accessToken);
 
         assertThat(tokenProviderGateway.getUsername(accessToken))
                 .isEqualTo(username);

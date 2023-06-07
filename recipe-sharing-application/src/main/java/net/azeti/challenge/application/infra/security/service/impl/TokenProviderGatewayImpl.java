@@ -15,6 +15,6 @@ public class TokenProviderGatewayImpl implements TokenProviderGateway {
     @Override
     @GetUsernameTokenProviderGateway
     public String getUsername(String accessToken) {
-        return jwtTokenProvider.getUserName(accessToken);
+        return jwtTokenProvider.getUsername(accessToken);
     }
 }
