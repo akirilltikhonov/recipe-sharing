@@ -13,6 +13,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -35,7 +36,6 @@ class JwtTokenProviderImplTest {
 
     private final String secretKey = "secretKey";
     private final String secretKeyBase64 = Base64.getEncoder().encodeToString(secretKey.getBytes());
-    private final String authorizationHeader = "authorizationHeader";
     private final long validityInMinutes = 1000;
     private JwtTokenProvider jwtTokenProvider;
     @Mock
@@ -45,7 +45,6 @@ class JwtTokenProviderImplTest {
     public void setUp() {
         jwtTokenProvider = new JwtTokenProvider(
                 secretKey,
-                authorizationHeader,
                 validityInMinutes,
                 userDetailsServiceImpl
         );
@@ -109,12 +108,12 @@ class JwtTokenProviderImplTest {
     }
 
     @Test
-    void getUserName() {
+    void getUsername() {
         String username = "John Doe";
         Collection<String> authorities = List.of("authority1", "authority2");
         String token = jwtTokenProvider.createToken(username, authorities);
 
-        String userName = jwtTokenProvider.getUserName(token);
+        String userName = jwtTokenProvider.getUsername(token);
         assertThat(userName).isEqualTo("John Doe");
     }
 
@@ -139,10 +138,10 @@ class JwtTokenProviderImplTest {
     void resolveToken() {
         HttpServletRequest request = mock(HttpServletRequest.class);
         String token = "token";
-        doReturn(token).when(request).getHeader(authorizationHeader);
+        doReturn(token).when(request).getHeader(HttpHeaders.AUTHORIZATION);
 
         assertThat(jwtTokenProvider.resolveToken(request)).isEqualTo(token);
 
-        verify(request).getHeader(authorizationHeader);
+        verify(request).getHeader(HttpHeaders.AUTHORIZATION);
     }
 }

@@ -11,7 +11,6 @@ import net.azeti.challenge.api.enums.Unit;
 import net.azeti.challenge.application.integrationtest.layer.recipe.sharing.ApplicationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -26,8 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class AuthenticationControllerEndToEndTest extends ApplicationTest {
     private static final String BASE_PATH_AUTH = "/recipe-sharing/authentication/";
     private static final String BASE_PATH = "/recipe-sharing/recipes/";
-    @Value("${jwt.header}")
-    private String header;
+    private final String header = HttpHeaders.AUTHORIZATION;
     @Autowired
     private TestRestTemplate testRestTemplate;
 
