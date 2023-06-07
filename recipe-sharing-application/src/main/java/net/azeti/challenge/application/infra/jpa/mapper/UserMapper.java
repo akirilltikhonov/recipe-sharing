@@ -1,9 +1,11 @@
 package net.azeti.challenge.application.infra.jpa.mapper;
 
 import net.azeti.challenge.application.domain.User;
+import net.azeti.challenge.application.domain.authentification.Registration;
 import net.azeti.challenge.application.infra.jpa.entity.UserEntity;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(
@@ -12,6 +14,9 @@ import org.mapstruct.ReportingPolicy;
         , unmappedSourcePolicy = ReportingPolicy.ERROR
 )
 public interface UserMapper {
+
+    @Mapping(target = "userId", ignore = true)
+    UserEntity toUserEntity(Registration registration);
 
     @BeanMapping(ignoreUnmappedSourceProperties = {"userId"})
     User toUser(UserEntity userEntity);

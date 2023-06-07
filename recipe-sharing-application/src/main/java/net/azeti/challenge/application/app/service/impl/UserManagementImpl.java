@@ -2,22 +2,31 @@ package net.azeti.challenge.application.app.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import net.azeti.challenge.application.app.port.gateway.AuthenticationGateway;
+import net.azeti.challenge.application.app.port.repository.UserRepository;
 import net.azeti.challenge.application.app.service.UserManagement;
+import net.azeti.challenge.application.domain.User;
 import net.azeti.challenge.application.domain.authentification.Login;
+import net.azeti.challenge.application.domain.authentification.Registration;
+import net.azeti.challenge.application.domain.authentification.RegistrationResult;
 import net.azeti.challenge.application.domain.authentification.Token;
-import net.azeti.challenge.application.infra.security.user.Registration;
-import net.azeti.challenge.application.infra.security.user.RegistrationResult;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class UserManagementImpl implements UserManagement {
 
+    private final UserRepository userRepository;
     private final AuthenticationGateway authenticationGateway;
 
     @Override
     public RegistrationResult register(Registration registration) {
-        return null;
+        User user = userRepository.registrate(registration);
+        Token token = authenticationGateway.authenticate(user.getUsername(), user.getPassword());
+        return RegistrationResult.builder()
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .token(token)
+                .build();
     }
 
     @Override
