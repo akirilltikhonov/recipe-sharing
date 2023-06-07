@@ -31,7 +31,9 @@ public interface RecipeRequestMapper {
     Recipe toRecipe(CreateRecipeDto createRecipeDto, String accessToken);
 
     @Mapping(target = "recipeId", ignore = true)
-    Recipe toRecipe(UpdateRecipeDto updateRecipeDto);
+    @Mapping(target = "username", source = "accessToken", qualifiedBy = GetUsernameTokenProviderGateway.class)
+    @BeanMapping(ignoreUnmappedSourceProperties = {"empty", "bytes", "blank"})
+    Recipe toRecipe(UpdateRecipeDto updateRecipeDto, String accessToken);
 
     RecipeFilter toRecipeFilter(RecipeFilterDto recipeFilterDto);
 }

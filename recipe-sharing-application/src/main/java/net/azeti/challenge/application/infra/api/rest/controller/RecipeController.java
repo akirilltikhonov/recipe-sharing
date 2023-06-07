@@ -62,8 +62,11 @@ public class RecipeController implements RecipeControllerApi {
 
     @PutMapping("/{recipeId}")
     @PreAuthorize("hasAuthority('WRITE')")
-    public ResponseEntity<RecipeDto> update(@PathVariable @NotNull Long recipeId, @RequestBody @Valid UpdateRecipeDto updateRecipeDto) {
-        var recipe = recipeRequestMapper.toRecipe(updateRecipeDto);
+    public ResponseEntity<RecipeDto> update(@PathVariable @NotNull Long recipeId,
+                                            @RequestBody @Valid UpdateRecipeDto updateRecipeDto,
+                                            @RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken
+    ) {
+        var recipe = recipeRequestMapper.toRecipe(updateRecipeDto, accessToken);
         var updatedRecipe = recipeManagement.update(recipeId, recipe);
         return ResponseEntity.ok(recipeResponseMapper.toRecipeDto(updatedRecipe));
     }

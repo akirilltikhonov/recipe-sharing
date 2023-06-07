@@ -56,14 +56,13 @@ class RecipeControllerEndToEndTest extends ApplicationTest {
                 .build();
         var updateRecipe = UpdateRecipeDto.builder()
                 .title(recipe.title())
-                .username(recipe.username())
                 .description(recipe.description())
                 .instructions(recipe.instructions())
                 .servings(recipe.servings())
                 .ingredients(List.of(recipe.ingredients().iterator().next(), ingredientDto2))
                 .build();
 
-        var updatedRecipe = recipeController.update(recipeId, updateRecipe).getBody();
+        var updatedRecipe = recipeController.update(recipeId, updateRecipe, accessToken).getBody();
         assertThat(updatedRecipe)
                 .usingRecursiveComparison()
                 .ignoringFields("ingredients")
