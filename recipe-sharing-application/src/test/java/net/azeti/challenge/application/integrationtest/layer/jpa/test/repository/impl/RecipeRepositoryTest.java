@@ -3,6 +3,7 @@ package net.azeti.challenge.application.integrationtest.layer.jpa.test.repositor
 import net.azeti.challenge.application.app.port.repository.RecipeRepository;
 import net.azeti.challenge.application.domain.Recipe;
 import net.azeti.challenge.application.domain.enums.Unit;
+import net.azeti.challenge.application.domain.exception.notfound.RecipeNotFoundException;
 import net.azeti.challenge.application.infra.jpa.mapper.RecipeMapper;
 import net.azeti.challenge.application.infra.jpa.repository.RecipeJpaRepository;
 import net.azeti.challenge.application.integrationtest.generator.IngredientEntityGenerator;
@@ -15,7 +16,6 @@ import org.springframework.dao.InvalidDataAccessApiUsageException;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -162,7 +162,7 @@ public class RecipeRepositoryTest extends ApplicationJpaTest {
         assertThatThrownBy(() -> recipeRepository.update(recipeForUpdate.toBuilder().recipeId(null).build()))
                 .isInstanceOf(InvalidDataAccessApiUsageException.class);
         assertThatThrownBy(() -> recipeRepository.update(recipeForUpdate.toBuilder().recipeId(999999999999999999L).build()))
-                .isInstanceOf(NoSuchElementException.class);
+                .isInstanceOf(RecipeNotFoundException.class);
     }
 
     @Test
@@ -176,7 +176,7 @@ public class RecipeRepositoryTest extends ApplicationJpaTest {
         assertThatThrownBy(() -> recipeRepository.delete(null))
                 .isInstanceOf(InvalidDataAccessApiUsageException.class);
         assertThatThrownBy(() -> recipeRepository.delete(999999999999999999L))
-                .isInstanceOf(NoSuchElementException.class);
+                .isInstanceOf(RecipeNotFoundException.class);
     }
 
     @Test

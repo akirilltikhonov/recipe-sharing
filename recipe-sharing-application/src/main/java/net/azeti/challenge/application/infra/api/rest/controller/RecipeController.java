@@ -8,6 +8,7 @@ import net.azeti.challenge.api.dto.RecipeFilterDto;
 import net.azeti.challenge.api.dto.UpdateRecipeDto;
 import net.azeti.challenge.application.app.service.RecipeManagement;
 import net.azeti.challenge.application.app.service.RecipeSearch;
+import net.azeti.challenge.application.domain.exception.notfound.RecipeNotFoundException;
 import net.azeti.challenge.application.infra.api.rest.mapper.request.RecipeRequestMapper;
 import net.azeti.challenge.application.infra.api.rest.mapper.response.RecipeResponseMapper;
 import net.azeti.challenge.client.RecipeControllerApi;
@@ -50,7 +51,8 @@ public class RecipeController implements RecipeControllerApi {
     @GetMapping("/{recipeId}")
     @PreAuthorize("hasAuthority('READ')")
     public ResponseEntity<RecipeDto> getById(@PathVariable @NotNull Long recipeId) {
-        var recipe = recipeManagement.getById(recipeId).orElseThrow();
+        var recipe = recipeManagement.getById(recipeId)
+                .orElseThrow(() -> new RecipeNotFoundException(recipeId));
         return ResponseEntity.ok(recipeResponseMapper.toRecipeDto(recipe));
     }
 
