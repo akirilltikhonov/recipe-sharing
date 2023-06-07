@@ -7,6 +7,7 @@ import net.azeti.challenge.application.integrationtest.layer.recipe.sharing.Appl
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -27,6 +28,8 @@ class RecipeControllerValidationTest extends ApplicationTest {
     private RecipeController recipeController;
     @Autowired
     private ObjectMapper objectMapper;
+    @Value("${access-token.non-expiring}")
+    private String accessToken;
 
     static Stream<File> isNotValidCreate() throws IOException {
         return Arrays.stream(Objects.requireNonNull(
@@ -43,7 +46,7 @@ class RecipeControllerValidationTest extends ApplicationTest {
     @WithMockUser(authorities={"WRITE"})
     void isNotValidCreate(File file) throws IOException {
         var request = objectMapper.readValue(file, CreateRecipeDto.class);
-        assertThatThrownBy(() -> recipeController.create(request))
+        assertThatThrownBy(() -> recipeController.create(request, accessToken))
                 .isInstanceOf(ConstraintViolationException.class);
     }
 
@@ -52,7 +55,7 @@ class RecipeControllerValidationTest extends ApplicationTest {
     @WithMockUser(authorities={"WRITE"})
     void isValidCreate(File file) throws IOException {
         var request = objectMapper.readValue(file, CreateRecipeDto.class);
-        assertThat(recipeController.create(request).getStatusCode())
+        assertThat(recipeController.create(request, accessToken).getStatusCode())
                 .isEqualTo(HttpStatus.OK);
     }
 }

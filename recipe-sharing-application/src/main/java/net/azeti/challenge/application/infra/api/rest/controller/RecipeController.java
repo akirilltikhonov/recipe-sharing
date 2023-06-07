@@ -12,6 +12,7 @@ import net.azeti.challenge.application.domain.exception.notfound.RecipeNotFoundE
 import net.azeti.challenge.application.infra.api.rest.mapper.request.RecipeRequestMapper;
 import net.azeti.challenge.application.infra.api.rest.mapper.response.RecipeResponseMapper;
 import net.azeti.challenge.client.RecipeControllerApi;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,15 +37,17 @@ import java.util.List;
 @SecurityRequirement(name = "Authorization")
 public class RecipeController implements RecipeControllerApi {
 
-    private final RecipeRequestMapper recipeRequestMapper;
     private final RecipeManagement recipeManagement;
     private final RecipeSearch recipeSearch;
+    private final RecipeRequestMapper recipeRequestMapper;
     private final RecipeResponseMapper recipeResponseMapper;
 
     @PostMapping(value = "/create")
     @PreAuthorize("hasAuthority('WRITE')")
-    public ResponseEntity<RecipeDto> create(@RequestBody @Valid CreateRecipeDto createRecipeDto) {
-        var recipe = recipeRequestMapper.toRecipe(createRecipeDto);
+    public ResponseEntity<RecipeDto> create(@RequestBody @Valid CreateRecipeDto createRecipeDto,
+                                            @RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken
+    ) {
+        var recipe = recipeRequestMapper.toRecipe(createRecipeDto, accessToken);
         recipe = recipeManagement.create(recipe);
         return ResponseEntity.ok(recipeResponseMapper.toRecipeDto(recipe));
     }
@@ -58,8 +62,11 @@ public class RecipeController implements RecipeControllerApi {
 
     @PutMapping("/{recipeId}")
     @PreAuthorize("hasAuthority('WRITE')")
-    public ResponseEntity<RecipeDto> update(@PathVariable @NotNull Long recipeId, @RequestBody @Valid UpdateRecipeDto updateRecipeDto) {
-        var recipe = recipeRequestMapper.toRecipe(updateRecipeDto);
+    public ResponseEntity<RecipeDto> update(@PathVariable @NotNull Long recipeId,
+                                            @RequestBody @Valid UpdateRecipeDto updateRecipeDto,
+                                            @RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken
+    ) {
+        var recipe = recipeRequestMapper.toRecipe(updateRecipeDto, accessToken);
         var updatedRecipe = recipeManagement.update(recipeId, recipe);
         return ResponseEntity.ok(recipeResponseMapper.toRecipeDto(updatedRecipe));
     }
