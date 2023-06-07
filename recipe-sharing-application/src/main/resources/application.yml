@@ -20,7 +20,7 @@ spring:
           auto: validate
 
 jwt:
-  secret: secretKey
+  secret: 3QkZZBhv9KZSdAY3GUxxVrx96po2pEWk
   expiration: 720
 
 security-configuration-properties:
