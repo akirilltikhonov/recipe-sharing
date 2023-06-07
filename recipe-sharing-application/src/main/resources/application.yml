@@ -23,10 +23,10 @@ jwt:
   header: Authorization
   secret: secretKey
   expiration: 720
-  api-name: JWT
 
 security-configuration-properties:
   permit-all-urls:
+    - /recipe-sharing/authentication/register
     - /recipe-sharing/authentication/login
     - /actuator/health
   swagger-urls:
