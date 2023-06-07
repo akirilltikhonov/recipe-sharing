@@ -20,7 +20,6 @@ spring:
           auto: validate
 
 jwt:
-  header: Authorization
   secret: secretKey
   expiration: 720
 

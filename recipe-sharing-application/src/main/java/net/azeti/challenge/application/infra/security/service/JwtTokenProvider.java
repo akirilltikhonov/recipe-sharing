@@ -7,6 +7,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import net.azeti.challenge.application.infra.security.model.exception.JwtAuthenticationException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -29,12 +30,11 @@ public class JwtTokenProvider {
 
     public JwtTokenProvider(
             @Value("${jwt.secret}") String secretKey,
-            @Value("${jwt.header}") String authorizationHeader,
             @Value("${jwt.expiration}") long validityInMinutes,
             UserDetailsService userDetailsServiceImpl
     ) {
         this.secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
-        this.authorizationHeader = authorizationHeader;
+        this.authorizationHeader = HttpHeaders.AUTHORIZATION;
         this.validityInMinutes = validityInMinutes;
         this.userDetailsServiceImpl = userDetailsServiceImpl;
     }

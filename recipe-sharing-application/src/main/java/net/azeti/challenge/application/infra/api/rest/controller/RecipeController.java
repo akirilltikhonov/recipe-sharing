@@ -34,7 +34,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/recipe-sharing/recipes")
-@SecurityRequirement(name = "Authorization")
+@SecurityRequirement(name = HttpHeaders.AUTHORIZATION)
 public class RecipeController implements RecipeControllerApi {
 
     private final RecipeManagement recipeManagement;
