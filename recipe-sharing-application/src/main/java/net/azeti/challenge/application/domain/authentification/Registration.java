@@ -1,12 +1,11 @@
-package net.azeti.challenge.application.domain;
+package net.azeti.challenge.application.domain.authentification;
 
 import lombok.Builder;
 import lombok.Value;
 
 @Value
-@Builder(toBuilder = true)
-public class User {
-
+@Builder
+public class Registration {
     String username;
     String password;
     String email;

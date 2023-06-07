@@ -1,7 +1,9 @@
 package net.azeti.challenge.application.infra.jpa.repository.impl;
 
 import net.azeti.challenge.application.domain.User;
+import net.azeti.challenge.application.domain.authentification.Registration;
 import net.azeti.challenge.application.infra.jpa.entity.UserEntity;
+import net.azeti.challenge.application.infra.jpa.mapper.RegistrationMapper;
 import net.azeti.challenge.application.infra.jpa.mapper.UserMapper;
 import net.azeti.challenge.application.infra.jpa.repository.UserJpaRepository;
 import org.junit.jupiter.api.Test;
@@ -23,7 +25,22 @@ class UserRepositoryImplTest {
     @Mock
     private UserJpaRepository userJpaRepository;
     @Mock
+    private RegistrationMapper registrationMapper;
+    @Mock
     private UserMapper userMapper;
+
+    @Test
+    void registrate() {
+        var registration = Registration.builder().build();
+
+        var userEntity = new UserEntity();
+        doReturn(userEntity).when(registrationMapper).toUserEntity(registration);
+        doReturn(userEntity).when(userJpaRepository).save(userEntity);
+        var user = User.builder().build();
+        doReturn(user).when(userMapper).toUser(userEntity);
+
+        assertThat(userRepository.registrate(registration)).isEqualTo(user);
+    }
 
     @Test
     void findByUsername() {

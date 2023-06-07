@@ -9,6 +9,7 @@ import net.azeti.challenge.api.dto.RecipeFilterDto;
 import net.azeti.challenge.api.dto.UpdateRecipeDto;
 import net.azeti.challenge.api.enums.Unit;
 import net.azeti.challenge.application.infra.api.rest.controller.RecipeController;
+import net.azeti.challenge.application.infra.security.service.JwtTokenFilter;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = {RecipeController.class})
 @AutoConfigureMockMvc(addFilters = false)
+@MockBean(JwtTokenFilter.class)
 class RecipeControllerIntegrationTest {
     private static final String BASE_PATH = "/recipe-sharing/recipes/";
 
