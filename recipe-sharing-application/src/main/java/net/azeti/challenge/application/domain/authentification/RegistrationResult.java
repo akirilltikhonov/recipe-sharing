@@ -8,5 +8,4 @@ import lombok.Value;
 public class RegistrationResult {
     String username;
     String email;
-    Token token;
 }

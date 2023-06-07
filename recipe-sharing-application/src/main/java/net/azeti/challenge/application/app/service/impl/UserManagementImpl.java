@@ -21,11 +21,9 @@ public class UserManagementImpl implements UserManagement {
     @Override
     public RegistrationResult register(Registration registration) {
         User user = userRepository.registrate(registration);
-        Token token = authenticationGateway.authenticate(user.getUsername(), user.getPassword());
         return RegistrationResult.builder()
                 .username(user.getUsername())
                 .email(user.getEmail())
-                .token(token)
                 .build();
     }
 

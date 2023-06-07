@@ -3,6 +3,7 @@ package net.azeti.challenge.application.infra.security.config;
 import lombok.RequiredArgsConstructor;
 import net.azeti.challenge.application.infra.security.config.properties.SecurityConfigurationProperties;
 import net.azeti.challenge.application.infra.security.service.JwtTokenFilter;
+import net.azeti.challenge.application.infra.security.service.JwtTokenProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,7 +14,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -26,15 +26,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
-
-    private final UserDetailsService userDetailsServiceImpl;
-    private final JwtTokenFilter jwtTokenFilter;
     private final SecurityConfigurationProperties properties;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final PasswordEncoder bCryptPasswordEncoder;
+    private final UserDetailsService userDetailsServiceImpl;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // We disabled csrf for simplicity.
         return http.csrf().disable()
+                .httpBasic().disable()
                 .sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     .and()
@@ -43,7 +44,7 @@ public class SecurityConfiguration {
                     .antMatchers(properties.getSwaggerUrls()).permitAll()
                     .anyRequest().authenticated()
                     .and()
-                .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtTokenFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
@@ -55,13 +56,8 @@ public class SecurityConfiguration {
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider() {
         var provider = new DaoAuthenticationProvider();
-        provider.setPasswordEncoder(bCryptPasswordEncoder());
+        provider.setPasswordEncoder(bCryptPasswordEncoder);
         provider.setUserDetailsService(userDetailsServiceImpl);
         return provider;
-    }
-
-    @Bean
-    public PasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder(12);
     }
 }
