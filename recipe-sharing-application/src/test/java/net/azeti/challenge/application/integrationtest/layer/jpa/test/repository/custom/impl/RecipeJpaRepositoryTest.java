@@ -68,6 +68,7 @@ public class RecipeJpaRepositoryTest extends ApplicationJpaTest {
 
     @Test
     void findByFilterTitleAndUsername() {
+//        TODO Pay attention to hibernate query because n+1 problem here.
         var found = recipeRepository.findByFilter(RecipeFilter.builder()
                 .titleLike(tittle)
                 .usernameLike(username1.substring(0, 7))
