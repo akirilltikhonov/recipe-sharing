@@ -1,5 +1,6 @@
 package net.azeti.challenge.application.infra.api.rest.controller;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import net.azeti.challenge.api.dto.CreateRecipeDto;
@@ -45,7 +46,7 @@ public class RecipeController implements RecipeControllerApi {
     @PostMapping(value = "/create")
     @PreAuthorize("hasAuthority('WRITE')")
     public ResponseEntity<RecipeDto> create(@RequestBody @Valid CreateRecipeDto createRecipeDto,
-                                            @RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken
+                                            @Schema(hidden = true) @RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken
     ) {
         var recipe = recipeRequestMapper.toRecipe(createRecipeDto, accessToken);
         recipe = recipeManagement.create(recipe);
@@ -64,7 +65,7 @@ public class RecipeController implements RecipeControllerApi {
     @PreAuthorize("hasAuthority('WRITE')")
     public ResponseEntity<RecipeDto> update(@PathVariable @NotNull Long recipeId,
                                             @RequestBody @Valid UpdateRecipeDto updateRecipeDto,
-                                            @RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken
+                                            @Schema(hidden = true) @RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken
     ) {
         var recipe = recipeRequestMapper.toRecipe(updateRecipeDto, accessToken);
         var updatedRecipe = recipeManagement.update(recipeId, recipe);
