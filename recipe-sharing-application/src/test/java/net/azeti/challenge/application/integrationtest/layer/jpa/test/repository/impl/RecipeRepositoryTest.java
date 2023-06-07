@@ -181,6 +181,7 @@ public class RecipeRepositoryTest extends ApplicationJpaTest {
 
     @Test
     void getByUser() {
+//        TODO Pay attention to hibernate query because n+1 problem here.
         var found = recipeRepository.getByUser(recipeToByUser1.getUsername());
         assertThat(found).hasSize(3)
                 .containsAll(List.of(recipeToByUser1, recipeToByUser2, recipeToByUser3));
