@@ -99,3 +99,5 @@ Write unit tests for the implemented functionality to ensure proper operation an
 ## Note
 * Focus on implementing the backend functionality only. No need to spend time on frontend/UI development for this challenge.
 * Read the `ABOUT.md` for more details about this source code.
+
+## Zapiski Kydryasha
