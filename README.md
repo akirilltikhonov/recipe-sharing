@@ -101,3 +101,4 @@ Write unit tests for the implemented functionality to ensure proper operation an
 * Read the `ABOUT.md` for more details about this source code.
 
 ## Zapiski Kydryasha
+* Vsem hello
